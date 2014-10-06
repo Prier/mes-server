@@ -2,23 +2,35 @@ __author__ = 'prier'
 
 import argparse
 import threading
+import random
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 
 # MES functions
 
-def get_orders(x,y):
-    return x+y
+def generate_order():
+    # generate order
 
-def status(cell_id, event, time):
-    stat = " Cell ID: "+cell_id+"\n Event:"+event+"\n Time: "+time
-    print stat
+    threading.Timer(60, generate_order()).start()
+
+def fetch_order(cell_id):
+    print "fetch"
+
+def mobile_status(m_status):
+    for k, v in m_status.items():
+        print k, ' = ', v
+
+def cell_status(c_status):
+    for k, v in c_status.items():
+        print k, ' = ', v
 
 class ServerThread(threading.Thread):
     def __init__(self, server_addr):
         threading.Thread.__init__(self)
         self.server = SimpleXMLRPCServer(server_addr, logRequests=True, allow_none=True)
         self.server.register_multicall_functions()
-        self.server.register_function(status, 'status')
+        self.server.register_function(cell_status, 'cell_status')
+        self.server.register_function(mobile_status, 'mobile_status')
+
     def run(self):
         self.server.serve_forever()
 
