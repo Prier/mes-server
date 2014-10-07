@@ -12,6 +12,8 @@ add_message_files(
    mes_mobile_status.msg
    mes_sorting_command.msg
    mes_sorting_status.msg
+   mes_order.msg
+   lego_brick.msg
 )
 
 ## Generate added messages and services with any dependencies listed here

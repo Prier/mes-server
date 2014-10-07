@@ -5,3 +5,4 @@ uint8 color
 
 # The size of the brick is the number of holes (4,6 or 8)
 uint8 size
+uint8 count
