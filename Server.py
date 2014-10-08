@@ -12,6 +12,10 @@ from collections import deque
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 import Resources
 
+# The resource handler
+
+resource_handler = Resources.ResourceHandler()
+
 # MES variables
 
 order_id = 0
@@ -21,12 +25,12 @@ free_cell_list = deque([])
 
 active_orders = []
 
+
 class Order():
-    def __init__(self,robot):
+    def __init__(self, robot):
         self.allocatedArea = []
         self.allocatedRobot = robot
         print 'lolo'
-
 
 
 # MES functions
@@ -56,13 +60,13 @@ def mobile_status(m_status):
         print k, ' = ', v
     
     robot_id = m_status['robot_id']
-    order = Resources.resources['Mobile' + str(robot_id)].boundToOrder
-    if order != 0 :
+    order = resource_handler.get_mobile_robot(robot_id).boundToOrder
+    if order != 0:
         print 'nanananaananananabaatmaan'
     else:
         if m_status['state'] == 'STATE_FREE':
-            nextorder = fetch_order()
-            if nextorder != 0 :
+            next_order = fetch_order()
+            if next_order != 0:
                 print 'there are orders'
             else:
                 print 'No orders'
@@ -114,6 +118,7 @@ def cell_status(c_status):
 
     return cell_response
 
+
 class ServerThread(threading.Thread):
     def __init__(self, server_addr):
         threading.Thread.__init__(self)
@@ -146,7 +151,7 @@ def main():
 
     # generate order
     l = task.LoopingCall(generate_order)
-    l.start(10.0) # call every second
+    l.start(10.0)  # call every second
 
     # l.stop() will stop the looping calls
     reactor.run()
