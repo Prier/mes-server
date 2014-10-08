@@ -10,6 +10,7 @@ from twisted.internet import reactor
 import Queue
 from collections import deque
 from SimpleXMLRPCServer import SimpleXMLRPCServer
+import Resources
 
 # MES variables
 
@@ -20,35 +21,13 @@ free_cell_list = deque([])
 
 active_orders = []
 
-resources = { 
-    'Dispenser' : MesResource(),
-    'Ramp' : MesResource(),
-    'Line' : MesResource(),
-    'Floor' : MesResource(),
-    'Station1' : MesResource(),
-    'Station2' : MesResource(),
-    'Station3' : MesResource(),
-    'LoadOff1' : MesResource(),
-    'LoadOff2' : MesResource(),
-    'LoadOff3' : MesResource(),
-    'Mobile1' : MesResource(),
-    'Mobile2' : MesResource(),
-    'Mobile3' : MesResource(),
-    'Cell1' : MesResource(),
-    'Cell2' : MesResource(),
-    'Cell3' : MesResource()
-}
-
 class Order():
     def __init__(self,robot):
         self.allocatedArea = []
         self.allocatedRobot = robot
         print 'lolo'
 
-class MesResource():
-    def __init__(self):
-        self.taken = false
-        self.boundToOrder = 0
+
 
 # MES functions
 
@@ -77,14 +56,14 @@ def mobile_status(m_status):
         print k, ' = ', v
     
     robot_id = m_status['robot_id']
-    order = resources['Mobile' + str(robot_id)].boundToOrder
+    order = Resources.resources['Mobile' + str(robot_id)].boundToOrder
     if order != 0 :
         print 'nanananaananananabaatmaan'
     else:
         if m_status['state'] == 'STATE_FREE':
             nextorder = fetch_order()
             if nextorder != 0 :
-                agadgf
+                print 'there are orders'
             else:
                 print 'No orders'
 
