@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 __author__ = 'armienn'
 
+class MesResource():
+    def __init__(self):
+        self.taken = False
+        self.boundToOrder = 0
+        troloro = 0
+
 resources = { 
     'Dispenser' : MesResource(),
     'Ramp' : MesResource(),
@@ -20,7 +26,4 @@ resources = {
     'Cell3' : MesResource()
 }
 
-class MesResource():
-    def __init__(self):
-        self.taken = false
-        self.boundToOrder = 0
+
