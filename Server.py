@@ -3,25 +3,92 @@ __author__ = 'prier'
 import argparse
 import threading
 import random
+import datetime
+from twisted.internet import task
+from twisted.internet import reactor
+import Queue
+from collections import deque
 from SimpleXMLRPCServer import SimpleXMLRPCServer
+
+# MES variables
+
+order_id = 0
+order_queue = Queue.Queue()
+free_robot_list = deque([])
+free_cell_list = deque([])
 
 # MES functions
 
 def generate_order():
     # generate order
+    global order_id
+    order_id += 1
+    order = {
+        'order_id': order_id,
+        'bricks':
+            dict(color_red=random.randint(3, 8), color_blue=random.randint(3, 8), color_yellow=random.randint(3, 8)),
+        'time': str(datetime.datetime.today())
+    }
+    order_queue.put(order)
 
-    threading.Timer(60, generate_order()).start()
 
-def fetch_order(cell_id):
-    print "fetch"
+def fetch_order():
+    if not order_queue.empty():
+        return order_queue.get()
+    else:
+        print 'No orders in queue'
+
 
 def mobile_status(m_status):
-    for k, v in m_status.items():
-        print k, ' = ', v
+    # for k, v in m_status.items():
+    #     print k, ' = ', v
+
+    # Save state information
+    if m_status['state'] == 'STATE_FREE':
+        free_robot = {
+            'robot_id': m_status['robot_id'],
+            'time': m_status['time']
+        }
+        free_robot_list.append(free_robot)
+
+    # Response
+
+    mobile_response = {
+
+    }
+
 
 def cell_status(c_status):
-    for k, v in c_status.items():
-        print k, ' = ', v
+    # for k, v in c_status.items():
+    #     print k, ' = ', v
+
+    resp_order = 0
+    resp_cmd = ''
+
+    # Save state information
+    if c_status['state'] == 'STATE_FREE':
+        free_cell = {
+            'cell_id': c_status['cell_id'],
+            'time': c_status['time']
+        }
+        free_cell_list.append(free_cell)
+
+    if free_cell_list and free_robot_list:
+        if c_status['cell_id'] == free_cell_list[0]['cell_id']:
+            resp_cmd = 'COMMAND_WAIT'
+            resp_order = fetch_order()
+            free_cell_list.popleft()
+            free_robot_list.popleft()
+        else:
+            resp_order = 0
+
+    # Response
+    cell_response = {
+        'command': resp_cmd,
+        'order': resp_order,
+    }
+
+    return cell_response
 
 class ServerThread(threading.Thread):
     def __init__(self, server_addr):
@@ -34,13 +101,15 @@ class ServerThread(threading.Thread):
     def run(self):
         self.server.serve_forever()
 
+
 def run_server(host, port):
     # server code
     server_addr = (host, port)
     server = ServerThread(server_addr)
-    server.start() # The server is now running
+    server.start()  # The server is now running
     print '\n####### MES-server 2014 #######\n'
     print "Server thread started. Testing the server..."
+
 
 def main():
     parser = argparse.ArgumentParser(description='Multithreaded MES XMLRPC Server')
@@ -50,6 +119,13 @@ def main():
     given_args = parser.parse_args()
     host, port = given_args.host, given_args.port
     run_server(host, port)
+
+    # generate order
+    l = task.LoopingCall(generate_order)
+    l.start(1.0) # call every second
+
+    # l.stop() will stop the looping calls
+    reactor.run()
 
 if __name__ == "__main__":
     main()
