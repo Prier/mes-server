@@ -18,6 +18,38 @@ order_queue = Queue.Queue()
 free_robot_list = deque([])
 free_cell_list = deque([])
 
+active_orders = []
+
+resources = { 
+    'Dispenser' : MesResource(),
+    'Ramp' : MesResource(),
+    'Line' : MesResource(),
+    'Floor' : MesResource(),
+    'Station1' : MesResource(),
+    'Station2' : MesResource(),
+    'Station3' : MesResource(),
+    'LoadOff1' : MesResource(),
+    'LoadOff2' : MesResource(),
+    'LoadOff3' : MesResource(),
+    'Mobile1' : MesResource(),
+    'Mobile2' : MesResource(),
+    'Mobile3' : MesResource(),
+    'Cell1' : MesResource(),
+    'Cell2' : MesResource(),
+    'Cell3' : MesResource()
+}
+
+class Order():
+    def __init__(self,robot):
+        self.allocatedArea = []
+        self.allocatedRobot = robot
+        print 'lolo'
+
+class MesResource():
+    def __init__(self):
+        self.taken = false
+        self.boundToOrder = 0
+
 # MES functions
 
 def generate_order():
@@ -37,12 +69,24 @@ def fetch_order():
     if not order_queue.empty():
         return order_queue.get()
     else:
-        print 'No orders in queue'
+        return 0
 
 
 def mobile_status(m_status):
-    # for k, v in m_status.items():
-    #     print k, ' = ', v
+    for k, v in m_status.items():
+        print k, ' = ', v
+    
+    robot_id = m_status['robot_id']
+    order = resources['Mobile' + str(robot_id)].boundToOrder
+    if order != 0 :
+        print 'nanananaananananabaatmaan'
+    else:
+        if m_status['state'] == 'STATE_FREE':
+            nextorder = fetch_order()
+            if nextorder != 0 :
+                agadgf
+            else:
+                print 'No orders'
 
     # Save state information
     if m_status['state'] == 'STATE_FREE':
@@ -60,8 +104,8 @@ def mobile_status(m_status):
 
 
 def cell_status(c_status):
-    # for k, v in c_status.items():
-    #     print k, ' = ', v
+    for k, v in c_status.items():
+        print k, ' = ', v
 
     resp_order = 0
     resp_cmd = ''
@@ -123,7 +167,7 @@ def main():
 
     # generate order
     l = task.LoopingCall(generate_order)
-    l.start(1.0) # call every second
+    l.start(10.0) # call every second
 
     # l.stop() will stop the looping calls
     reactor.run()
