@@ -50,8 +50,8 @@ def mobile_status(m_status):
         print k, ' = ', v
 
     robot_id = m_status['robot_id']
-    robot_name = resource_handler.get_mobile_robot_name(robot_id)
-    order = resource_handler.get_mobile_robot(robot_id).boundToOrder
+    robot_name = Resources.get_mobile_robot_name(robot_id)
+    order = resource_handler.get_mobile_robot(robot_id).bound_to_order
     if order != 0:
         print 'nanananaananananabaatmaan'
     else:
