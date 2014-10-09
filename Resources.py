@@ -33,5 +33,10 @@ class ResourceHandler():
     def get_mobile_robot(self, number):
         return self.resources['Mobile'+str(number)]
 
-    def get_mobile_robot_name(self, number):
+    @staticmethod
+    def get_mobile_robot_name(number):
         return 'Mobile'+str(number)
+
+    @staticmethod
+    def get_command(new_order, robot_name, m_status):
+        print 'what ??!'
