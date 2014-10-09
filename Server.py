@@ -27,10 +27,11 @@ active_orders = []
 
 
 class Order():
-    def __init__(self, robot):
+    def __init__(self, order, robot):
+        self.order = order
         self.allocatedArea = []
         self.allocatedRobot = robot
-        print 'lolo'
+        self.status = 'unstarted'
 
 
 # MES functions
@@ -60,6 +61,7 @@ def mobile_status(m_status):
         print k, ' = ', v
     
     robot_id = m_status['robot_id']
+    robot_name = resource_handler.get_mobile_robot_name(robot_id)
     order = resource_handler.get_mobile_robot(robot_id).boundToOrder
     if order != 0:
         print 'nanananaananananabaatmaan'
@@ -67,6 +69,18 @@ def mobile_status(m_status):
         if m_status['state'] == 'STATE_FREE':
             next_order = fetch_order()
             if next_order != 0:
+                new_order = Order(next_order, robot_name)
+                command = resource_handler.get_command(new_order, robot_name, m_status)
+                if command != 0:
+
+                    new_order.status = 'to_dispenser'
+                else:
+
+
+
+                mobile_response = {
+
+                }
                 print 'there are orders'
             else:
                 print 'No orders'

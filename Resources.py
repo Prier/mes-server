@@ -32,3 +32,6 @@ class ResourceHandler():
 
     def get_mobile_robot(self, number):
         return self.resources['Mobile'+str(number)]
+
+    def get_mobile_robot_name(self, number):
+        return 'Mobile'+str(number)
