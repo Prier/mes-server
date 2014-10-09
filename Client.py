@@ -66,7 +66,7 @@ def main():
     print cell_response['order']
     print mobile_response['order']
 
-    cell_response = (server.cell_status(modifed_cell_status))
+    cell_response = (server.cell_status(modified_cell_status))
     mobile_response = (server.mobile_status(modified_mobile_status))
 
     print "\nGot command: \n"
@@ -86,7 +86,7 @@ def main():
     print cell_response['order']
     print mobile_response['order']
 
-    cell_response = (server.cell_status(modifed2_cell_status))
+    cell_response = (server.cell_status(modified2_cell_status))
     mobile_response = (server.mobile_status(modified2_mobile_status))
 
     print "\nGot command: \n"
@@ -106,7 +106,7 @@ def main():
     print cell_response['order']
     print mobile_response['order']
 
-    cell_response = (server.cell_status(modifed3_cell_status))
+    cell_response = (server.cell_status(modified3_cell_status))
     mobile_response = (server.mobile_status(modified2_mobile_status))
 
     print "\nGot command: \n"
@@ -126,7 +126,7 @@ def main():
     print cell_response['order']
     print mobile_response['order']
 
-    cell_response = (server.cell_status(modifed4_cell_status))
+    cell_response = (server.cell_status(modified4_cell_status))
     mobile_response = (server.mobile_status(modified2_mobile_status))
 
     print "\nGot command: \n"
