@@ -97,7 +97,7 @@ def cell_status(c_status):
     robot_name = Resources.get_cell_robot_name(robot_id)
     order = resource_handler.get_cell_robot(robot_id).bound_to_order
     if order != 0:
-        print robot_name, ' has received an order #', order_id
+        print robot_name, ' has received an order #\n', order_id
         if c_status['state'] == 'STATE_FREE'\
                 or c_status['state'] == 'STATE_WORKING':
             command = resource_handler.get_command(robot_name, c_status)
@@ -110,22 +110,22 @@ def cell_status(c_status):
         elif c_status['state'] == 'STATE_SORTING':
             command = resource_handler.get_command_c(robot_name, c_status)
             return command
-            print robot_name, ' is sorting'
+            print robot_name, ' is sorting\n'
         elif c_status['state'] == 'STATE_OUTOFBRICKS':
             return dict(command='COMMAND_WAIT')
-            print robot_name, ' is out of bricks'
+            print robot_name, ' is out of bricks\n'
         elif c_status['state'] == 'STATE_ORDERSORTED':
             return dict(command='STATE_WAIT')
-            print robot_name, ' is done sorting'
+            print robot_name, ' is done sorting\n'
         elif c_status['state'] == 'STATE_LOADING':
             return dict(command='COMMAND_LOADBRICKS')
-            print robot_name, ' is loading bricks'
+            print robot_name, ' is loading bricks\n'
         elif c_status['state'] == 'STATE_ERROR':
             return dict(command='COMMAND_ABORT')
-            print robot_name, ' has encountered an error! ABORTING...'
+            print robot_name, ' has encountered an error! ABORTING...\n'
         else:
             return dict(command='COMMAND_ABORT')
-            print robot_name, ': Error in states! ABORTING...'
+            print robot_name, ': Error in states! ABORTING...\n'
 
 
 class ServerThread(threading.Thread):
