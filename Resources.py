@@ -214,27 +214,12 @@ class ResourceHandler():
         print 'finished finding command'
         return command
 
-    def get_new_command_c(self, next_order, robot_name, c_status):
-        new_order = Order(next_order, robot_name)
-        current_state = c_status['state']
-        next_state = self.resources[current_state].to_dispenser
-        command = 0
-        if not self.resources[next_state].taken:
-            new_order.allocate(self.resources, next_state, robot_name)
-            command = {
-                'command': 'COMMAND_SORTBRICKS'
-            }
-        return command
-
     def get_command_c(self, robot_name, c_status):
         current_order = self.resources[robot_name].bound_to_order
         current_state = c_status['state']
         current_order.deallocate(self.resources)
 
-        if current_order.status == OS_NOT_STARTED:
-            #TODO
-            print 'Processed command for OS_NOT_STARTED'
-        elif current_order.status == OS_SORT:
+        if current_order.status == OS_SORT:
             #TODO
             print 'Processed command for OS_SORT'
         elif current_order.status == OS_LOAD:
@@ -246,6 +231,9 @@ class ResourceHandler():
         else:
             #TODO
             print 'No commands processed'
+
+    def update_state(self, state):
+        print state
 
 
 def get_mobile_robot_name(number):
