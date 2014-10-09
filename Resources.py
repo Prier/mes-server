@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-__author__ = 'armienn'
+__author__ = "armienn and reaver"
 
 OS_NOT_STARTED = 0
 OS_TO_DISP = 1
@@ -106,14 +106,39 @@ class ResourceHandler():
             print 'what ??!'
         else:
             print 'what ??!'
-        print 'what ??!'
 
     def get_new_command_c(self, next_order, robot_name, c_status):
         new_order = Order(next_order, robot_name)
+        current_state = c_status['state']
+        next_state = self.resources[current_state].to_dispenser
+        command = 0
+        if not self.resources[next_state].taken:
+            new_order.allocate(self.resources, next_state, robot_name)
+            command = {
+                'command': 'COMMAND_SORTBRICKS'
+            }
+        return command
 
     def get_command_c(self, robot_name, c_status):
         current_order = self.resources[robot_name].bound_to_order
-        print 'what ??!'
+        current_state = c_status['state']
+        current_order.deallocate(self.resources)
+
+        if current_order.status == OS_NOT_STARTED:
+            #TODO
+            print 'Si'
+        elif current_order.status == OS_SORT:
+            #TODO
+            print 'Si'
+        elif current_order.status == OS_LOAD:
+            #TODO
+            print 'Si'
+        elif current_order.status == OS_WAIT_FOR_MOBILE:
+            #TODO
+            print 'Si'
+        else:
+            #TODO
+            print 'Si'
 
 
 def get_mobile_robot_name(number):

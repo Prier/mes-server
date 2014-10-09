@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-__author__ = 'prier'
+__author__ = "armienn & reaver"
 
 import argparse
 import threading
@@ -24,6 +24,7 @@ free_robot_list = deque([])
 free_cell_list = deque([])
 
 # MES functions
+
 
 def generate_order():
     # generate order
@@ -53,7 +54,7 @@ def mobile_status(m_status):
     robot_name = Resources.get_mobile_robot_name(robot_id)
     order = resource_handler.get_mobile_robot(robot_id).bound_to_order
     if order != 0:
-        print robot_name, ' has received an order #', order_id
+        print robot_name, ' has received order #', order_id
         if m_status['state'] == 'STATE_FREE'\
                 or m_status['state'] == 'STATE_WORKING':
             command = resource_handler.get_command(robot_name, m_status)
@@ -104,9 +105,9 @@ def cell_status(c_status):
     robot_name = Resources.get_cell_robot_name(robot_id)
     order = resource_handler.get_cell_robot(robot_id).bound_to_order
     if order != 0:
-        print robot_name, ' has received an order #', order_id
+        print robot_name, ' has received order #', order_id
         if c_status['state'] == 'STATE_FREE'\
-                or c_status['state'] == 'STATE_WORKING':
+                or c_status['state'] == 'STATE_SORTING':
             command = resource_handler.get_command(robot_name, c_status)
 
             if command == 0:
