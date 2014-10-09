@@ -60,7 +60,7 @@ def mobile_status(m_status):
             command = 0
 
             if next_order != 0:
-                command = resource_handler.get_command(next_order, robot_name, m_status)
+                command = resource_handler.get_command_m(next_order, robot_name, m_status)
 
             if command == 0:
                 command = {
@@ -68,7 +68,7 @@ def mobile_status(m_status):
                 }
             return command
         elif m_status['state'] == 'STATE_WORKING':
-            command = resource_handler.get_command(robot_name, m_status)
+            command = resource_handler.get_command_m(robot_name, m_status)
             return command
         elif m_status['state'] == 'STATE_ERROR':
             return dict(command='COMMAND_ABORT')
@@ -81,33 +81,38 @@ def cell_status(c_status):
     for k, v in c_status.items():
         print k, ' = ', v
 
-    resp_order = 0
-    resp_cmd = ''
-
     # Save state information
-    if c_status['state'] == 'STATE_FREE':
-        free_cell = {
-            'cell_id': c_status['cell_id'],
-            'time': c_status['time']
-        }
-        free_cell_list.append(free_cell)
+    if order != 0:
+        print 'nanananaananananabaatmaan'
+    else:
+        if c_status['state'] == 'STATE_FREE':
+            next_order = fetch_order()
+            command = 0
 
-    if free_cell_list and free_robot_list:
-        if c_status['cell_id'] == free_cell_list[0]['cell_id']:
-            resp_cmd = 'COMMAND_WAIT'
-            resp_order = fetch_order()
-            free_cell_list.popleft()
-            free_robot_list.popleft()
+            if next_order != 0:
+                command = resource_handler.get_command_c(next_order, robot_name, c_status)
+
+            if command == 0:
+                command = {
+                    'command': 'COMMAND_WAIT'
+                }
+            return command
+        elif c_status['state'] == 'STATE_SORTING':
+            command = resource_handler.get_command_c(robot_name, c_status)
+            return command
+        elif c_status['state'] == 'STATE_OUTOFBRICKS'
+
+            return
+        elif c_status['state'] == 'STATE_ORDERSORTED'
+
+            return
+        elif c_status['state'] == 'STATE_LOADING'
+
+            return
+        elif c_status['state'] == 'STATE_ERROR':
+            return dict(command='COMMAND_ABORT')
         else:
-            resp_order = 0
-
-    # Response
-    cell_response = {
-        'command': resp_cmd,
-        'order': resp_order,
-    }
-
-    return cell_response
+            return dict(command='COMMAND_ABORT')
 
 
 class ServerThread(threading.Thread):
