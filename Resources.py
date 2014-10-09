@@ -67,6 +67,12 @@ class ResourceHandler():
         }
         print 'Initialised resources'
 
+    def get_mobile_robot(self, number):
+        return self.resources['Mobile'+str(number)]
+
+    def get_cell_robot(self, number):
+        return self.resources['Cell'+str(number)]
+
     def get_new_command_m(self, next_order, robot_name, m_status):
         new_order = Order(next_order, robot_name)
         current_pos = m_status['position']
