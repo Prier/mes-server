@@ -1,6 +1,14 @@
 #!/usr/bin/env python
 __author__ = 'armienn'
 
+OS_NOT_STARTED = 0
+OS_TO_DISP = 1
+OS_WAIT_FOR_DISP = 2
+OS_TO_CELL = 3
+OS_WAIT_FOR_CELL = 4
+OS_TIP = 5
+OS_SORT = 6
+
 
 class MesResource():
     def __init__(self, to_dispenser, to_cell):
@@ -11,11 +19,27 @@ class MesResource():
 
 
 class Order():
-    def __init__(self, order, robot):
+    def __init__(self, resources, starting_area, order, robot):
         self.order = order
-        self.allocated_area = []
         self.allocated_robot = robot
-        self.status = 'unstarted'
+        self.allocated_areas = [starting_area]
+        resources[starting_area].taken = True
+        resources[starting_area].bound_to_order = self
+        resources[robot].bound_to_order = self
+        self.status = OS_NOT_STARTED
+
+    def allocate(self, resources, area, robot):
+        self.allocated_areas.append(area)
+        self.allocated_robot = robot
+        resources[area].taken = True
+        resources[area].bound_to_order = self
+        resources[robot].bound_to_order = self
+
+    def deallocate(self, resources):
+        for area in self.allocated_areas:
+            resources[area].taken = False
+        self.allocated_areas = []
+        resources[self.allocated_robot].bound_to_order = 0
 
 
 class ResourceHandler():
@@ -47,10 +71,36 @@ class ResourceHandler():
     def get_command_m(self, next_order, robot_name, m_status):
         new_order = Order(next_order, robot_name)
         current_pos = m_status['position']
-        print 'what ??!'
+        next_pos = self.resources[current_pos].to_dispenser
+        command = 0
+        if not self.resources[next_pos].taken:
+            new_order.allocate(self.resources, next_pos, robot_name)
+            command = {
+                'command': 'COMMAND_NAVIGATE',
+                'path': next_pos
+            }
+        return command
 
     def get_command_m(self, robot_name, m_status):
         current_order = self.resources[robot_name].bound_to_order
+        current_pos = m_status['position']
+        current_order.deallocate(self.resources)
+        if current_order.status == OS_NOT_STARTED:
+            print 'what ??!'
+        elif current_order.status == OS_TO_DISP:
+            print 'what ??!'
+        elif current_order.status == OS_WAIT_FOR_DISP:
+            print 'what ??!'
+        elif current_order.status == OS_TO_CELL:
+            print 'what ??!'
+        elif current_order.status == OS_WAIT_FOR_CELL:
+            print 'what ??!'
+        elif current_order.status == OS_TIP:
+            print 'what ??!'
+        elif current_order.status == OS_SORT:
+            print 'what ??!'
+        else:
+            print 'what ??!'
         print 'what ??!'
 
     def get_command_c(self, next_order, robot_name, c_status):
