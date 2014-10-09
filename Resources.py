@@ -126,19 +126,19 @@ class ResourceHandler():
 
         if current_order.status == OS_NOT_STARTED:
             #TODO
-            print 'Si'
+            print 'Processed command for OS_NOT_STARTED'
         elif current_order.status == OS_SORT:
             #TODO
-            print 'Si'
+            print 'Processed command for OS_SORT'
         elif current_order.status == OS_LOAD:
             #TODO
-            print 'Si'
+            print 'Processed command for OS_LOAD'
         elif current_order.status == OS_WAIT_FOR_MOBILE:
             #TODO
-            print 'Si'
+            print 'processed command for OS_WAIT_FOR_MOBILE'
         else:
             #TODO
-            print 'Si'
+            print 'No commands processed'
 
 
 def get_mobile_robot_name(number):
