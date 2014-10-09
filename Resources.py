@@ -8,8 +8,17 @@ class MesResource():
         self.boundToOrder = 0
 
 
+class Order():
+    def __init__(self, order, robot):
+        self.order = order
+        self.allocatedArea = []
+        self.allocatedRobot = robot
+        self.status = 'unstarted'
+
+
 class ResourceHandler():
     def __init__(self):
+        self.active_orders = []
         self.resources = {
             'Dispenser': MesResource(),
             'Ramp': MesResource(),
@@ -38,5 +47,6 @@ class ResourceHandler():
         return 'Mobile'+str(number)
 
     @staticmethod
-    def get_command(new_order, robot_name, m_status):
+    def get_command(next_order, robot_name, m_status):
+        new_order = Order(next_order, robot_name)
         print 'what ??!'

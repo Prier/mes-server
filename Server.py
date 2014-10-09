@@ -23,17 +23,6 @@ order_queue = Queue.Queue()
 free_robot_list = deque([])
 free_cell_list = deque([])
 
-active_orders = []
-
-
-class Order():
-    def __init__(self, order, robot):
-        self.order = order
-        self.allocatedArea = []
-        self.allocatedRobot = robot
-        self.status = 'unstarted'
-
-
 # MES functions
 
 def generate_order():
@@ -59,7 +48,7 @@ def fetch_order():
 def mobile_status(m_status):
     for k, v in m_status.items():
         print k, ' = ', v
-    
+
     robot_id = m_status['robot_id']
     robot_name = resource_handler.get_mobile_robot_name(robot_id)
     order = resource_handler.get_mobile_robot(robot_id).boundToOrder
@@ -68,36 +57,24 @@ def mobile_status(m_status):
     else:
         if m_status['state'] == 'STATE_FREE':
             next_order = fetch_order()
+            command = 0
+
             if next_order != 0:
-                new_order = Order(next_order, robot_name)
-                command = resource_handler.get_command(new_order, robot_name, m_status)
-                if command != 0:
+                command = resource_handler.get_command(next_order, robot_name, m_status)
 
-                    new_order.status = 'to_dispenser'
-                else:
-
-
-
-                mobile_response = {
-
+            if command == 0:
+                command = {
+                    'command': 'COMMAND_WAIT'
                 }
-                print 'there are orders'
-            else:
-                print 'No orders'
+            return command
+        elif m_status['state'] == 'STATE_WORKING':
+            command = resource_handler.get_command(robot_name, m_status)
+            return command
+        elif m_status['state'] == 'STATE_ERROR':
+            return dict(command='COMMAND_ABORT')
+        else:
+            return dict(command='COMMAND_ABORT')
 
-    # Save state information
-    if m_status['state'] == 'STATE_FREE':
-        free_robot = {
-            'robot_id': m_status['robot_id'],
-            'time': m_status['time']
-        }
-        free_robot_list.append(free_robot)
-
-    # Response
-
-    mobile_response = {
-
-    }
 
 
 def cell_status(c_status):
@@ -169,6 +146,7 @@ def main():
 
     # l.stop() will stop the looping calls
     reactor.run()
+
 
 if __name__ == "__main__":
     main()
