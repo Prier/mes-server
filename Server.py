@@ -53,7 +53,19 @@ def mobile_status(m_status):
     robot_name = Resources.get_mobile_robot_name(robot_id)
     order = resource_handler.get_mobile_robot(robot_id).bound_to_order
     if order != 0:
-        print 'nanananaananananabaatmaan'
+        if m_status['state'] == 'STATE_FREE'\
+                or m_status['state'] == 'STATE_WORKING':
+            command = resource_handler.get_command(robot_name, m_status)
+
+            if command == 0:
+                command = {
+                    'command': 'COMMAND_WAIT'
+                }
+            return command
+        elif m_status['state'] == 'STATE_ERROR':
+            return dict(command='COMMAND_ABORT')
+        else:
+            return dict(command='COMMAND_ABORT')
     else:
         if m_status['state'] == 'STATE_FREE':
             next_order = fetch_order()
@@ -67,9 +79,8 @@ def mobile_status(m_status):
                     'command': 'COMMAND_WAIT'
                 }
             return command
-        elif m_status['state'] == 'STATE_WORKING':
-            command = resource_handler.get_command_m(robot_name, m_status)
-            return command
+        elif m_status['state'] == 'STATE_WORKING':  # This shouldn't happen
+            return dict(command='COMMAND_ABORT')
         elif m_status['state'] == 'STATE_ERROR':
             return dict(command='COMMAND_ABORT')
         else:
