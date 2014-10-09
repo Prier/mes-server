@@ -111,15 +111,12 @@ def cell_status(c_status):
         elif c_status['state'] == 'STATE_SORTING':
             command = resource_handler.get_command_c(robot_name, c_status)
             return command
-        elif c_status['state'] == 'STATE_OUTOFBRICKS'
-
-            return
-        elif c_status['state'] == 'STATE_ORDERSORTED'
-
-            return
-        elif c_status['state'] == 'STATE_LOADING'
-
-            return
+        elif c_status['state'] == 'STATE_OUTOFBRICKS':
+            return dict(command='COMMAND_WAIT')
+        elif c_status['state'] == 'STATE_ORDERSORTED':
+            return dict(command='STATE_WAIT')
+        elif c_status['state'] == 'STATE_LOADING':
+            return dict(command='COMMAND_SORTBRICKS')
         elif c_status['state'] == 'STATE_ERROR':
             return dict(command='COMMAND_ABORT')
         else:
