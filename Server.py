@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-__author__ = 'prier'
+__author__ = 'armienn & reaver'
 
 import argparse
 import threading
@@ -56,7 +56,7 @@ def mobile_status(m_status):
         print robot_name, ' has received an order #', order_id
         if m_status['state'] == 'STATE_FREE'\
                 or m_status['state'] == 'STATE_WORKING':
-            command = resource_handler.get_command(robot_name, m_status)
+            command = resource_handler.get_command_m(robot_name, m_status)
 
             if command == 0:
                 command = {
@@ -94,7 +94,6 @@ def mobile_status(m_status):
             return dict(command='COMMAND_ABORT')
 
 
-
 def cell_status(c_status):
     for k, v in c_status.items():
         print k, ' = ', v
@@ -107,7 +106,7 @@ def cell_status(c_status):
         print robot_name, ' has received an order #', order_id
         if c_status['state'] == 'STATE_FREE'\
                 or c_status['state'] == 'STATE_WORKING':
-            command = resource_handler.get_command(robot_name, c_status)
+            command = resource_handler.get_command_c(robot_name, c_status)
 
             if command == 0:
                 command = {
@@ -128,7 +127,7 @@ def cell_status(c_status):
             print robot_name, ' is available\n'
 
             if next_order != 0:
-                command = resource_handler.get_new_command_c(next_order, robot_name, m_status)
+                command = resource_handler.get_new_command_c(next_order, robot_name, c_status)
 
             if command == 0:
                 command = {

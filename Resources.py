@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-__author__ = 'armienn'
+__author__ = 'armienn & reaver'
 
 OS_NOT_STARTED = 0
 OS_TO_DISP = 1
