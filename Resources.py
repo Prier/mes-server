@@ -8,6 +8,8 @@ OS_TO_CELL = 3
 OS_WAIT_FOR_CELL = 4
 OS_TIP = 5
 OS_SORT = 6
+OS_WAIT_FOR_MOBILE = 7
+OS_LOAD = 8
 
 
 class MesResource():
@@ -68,7 +70,7 @@ class ResourceHandler():
     def get_mobile_robot(self, number):
         return self.resources['Mobile'+str(number)]
 
-    def get_command_m(self, next_order, robot_name, m_status):
+    def get_new_command_m(self, next_order, robot_name, m_status):
         new_order = Order(next_order, robot_name)
         current_pos = m_status['position']
         next_pos = self.resources[current_pos].to_dispenser
@@ -103,9 +105,8 @@ class ResourceHandler():
             print 'what ??!'
         print 'what ??!'
 
-    def get_command_c(self, next_order, robot_name, c_status):
+    def get_new_command_c(self, next_order, robot_name, c_status):
         new_order = Order(next_order, robot_name)
-        print 'what ??!'
 
     def get_command_c(self, robot_name, c_status):
         current_order = self.resources[robot_name].bound_to_order

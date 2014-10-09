@@ -75,7 +75,7 @@ def mobile_status(m_status):
             print robot_name, ' is available\n'
 
             if next_order != 0:
-                command = resource_handler.get_command_m(next_order, robot_name, m_status)
+                command = resource_handler.get_new_command_m(next_order, robot_name, m_status)
 
             if command == 0:
                 command = {
@@ -128,7 +128,7 @@ def cell_status(c_status):
             print robot_name, ' is available\n'
 
             if next_order != 0:
-                command = resource_handler.get_command_c(next_order, robot_name, m_status)
+                command = resource_handler.get_new_command_c(next_order, robot_name, m_status)
 
             if command == 0:
                 command = {
