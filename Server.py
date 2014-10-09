@@ -56,7 +56,7 @@ def mobile_status(m_status):
         print robot_name, ' has received an order #', order_id
         if m_status['state'] == 'STATE_FREE'\
                 or m_status['state'] == 'STATE_WORKING':
-            command = resource_handler.get_command(robot_name, m_status)
+            command = resource_handler.get_command_m(robot_name, m_status)
 
             if command == 0:
                 command = {
@@ -107,7 +107,7 @@ def cell_status(c_status):
         print robot_name, ' has received an order #', order_id
         if c_status['state'] == 'STATE_FREE'\
                 or c_status['state'] == 'STATE_WORKING':
-            command = resource_handler.get_command(robot_name, c_status)
+            command = resource_handler.get_command_c(robot_name, c_status)
 
             if command == 0:
                 command = {
