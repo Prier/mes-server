@@ -21,130 +21,34 @@ mobile_status = {
     'state': 'STATE_FREE',
     'time': str(today),
     'battery': 80,
-    'position': 'Parking',
+    'position': "Floor",
     'status': "Human readable status message.."
 }
 
+def emulate_mobile_robot(m_response):
+    print 'Emulating mobile robot..'
+
+    # Test state-machine for mobile robot
+    if m_response['command'] == 'COMMAND_WAIT':
+        mobile_status['state'] = 'STATE_FREE'
+        print
+
+    print mobile_response
+
+    if mobile_response['command'] == 'COMMAND_WAIT':
+        mobile_status['state'] = 'STATE_WAIT'
+
+    print mobile_response
+
+def emulate_workcell():
+    print 'Emulating workcell..'
+
 
 def main():
-
-    modified_cell_status = cell_status
-    modified_cell_status['state'] = 'STATE_SORTING'
-
-    modified2_cell_status = cell_status
-    modified2_cell_status['state'] = 'STATE_OUTOFBRICKS'
-
-    modified3_cell_status = mobile_status
-    modified3_cell_status['state'] = 'STATE_ORDERSORTED'
-
-    modified4_cell_status = mobile_status
-    modified4_cell_status['state'] = 'STATE_LOADING'
-
-    modified_mobile_status = cell_status
-    modified_mobile_status['state'] = 'STATE_ERROR'
-
-    modified2_mobile_status = cell_status
-    modified2_mobile_status['state'] = 'STATE_WORKING'
-
-    cell_response = (server.cell_status(cell_status))
-    mobile_response = (server.mobile_status(mobile_status))
-
-    print "\nGot command: \n"
-    print cell_response['command']
-    print '\nGot order: \n'
-    if cell_response['order'] != 0:
-        cell_status['state'] = 'STATE_WAIT'
-
-    if mobile_response['order'] != 0:
-        mobile_status['state'] = 'STATE_WAIT'
-
-    print cell_response['order']
-
-    cell_response = (server.cell_status(cell_status))
-    mobile_response = (server.mobile_status(mobile_status))
-
-    print cell_response['order']
-    print mobile_response['order']
-
-    cell_response = (server.cell_status(modified_cell_status))
-    mobile_response = (server.mobile_status(modified_mobile_status))
-
-    print "\nGot command: \n"
-    print cell_response['command']
-    print '\nGot order: \n'
-    if cell_response['order'] != 0:
-        cell_status['state'] = 'STATE_WAIT'
-
-    if mobile_response['order'] != 0:
-        mobile_status['state'] = 'STATE_WAIT'
-
-    print cell_response['order']
-
-    cell_response = (server.cell_status(cell_status))
-    mobile_response = (server.mobile_status(mobile_status))
-
-    print cell_response['order']
-    print mobile_response['order']
-
-    cell_response = (server.cell_status(modified2_cell_status))
-    mobile_response = (server.mobile_status(modified2_mobile_status))
-
-    print "\nGot command: \n"
-    print cell_response['command']
-    print '\nGot order: \n'
-    if cell_response['order'] != 0:
-        cell_status['state'] = 'STATE_WAIT'
-
-    if mobile_response['order'] != 0:
-        mobile_status['state'] = 'STATE_WAIT'
-
-    print cell_response['order']
-
-    cell_response = (server.cell_status(cell_status))
-    mobile_response = (server.mobile_status(mobile_status))
-
-    print cell_response['order']
-    print mobile_response['order']
-
-    cell_response = (server.cell_status(modified3_cell_status))
-    mobile_response = (server.mobile_status(modified2_mobile_status))
-
-    print "\nGot command: \n"
-    print cell_response['command']
-    print '\nGot order: \n'
-    if cell_response['order'] != 0:
-        cell_status['state'] = 'STATE_WAIT'
-
-    if mobile_response['order'] != 0:
-        mobile_status['state'] = 'STATE_WAIT'
-
-    print cell_response['order']
-
-    cell_response = (server.cell_status(cell_status))
-    mobile_response = (server.mobile_status(mobile_status))
-
-    print cell_response['order']
-    print mobile_response['order']
-
-    cell_response = (server.cell_status(modified4_cell_status))
-    mobile_response = (server.mobile_status(modified2_mobile_status))
-
-    print "\nGot command: \n"
-    print cell_response['command']
-    print '\nGot order: \n'
-    if cell_response['order'] != 0:
-        cell_status['state'] = 'STATE_WAIT'
-
-    if mobile_response['order'] != 0:
-        mobile_status['state'] = 'STATE_WAIT'
-
-    print cell_response['order']
-
-    cell_response = (server.cell_status(cell_status))
-    mobile_response = (server.mobile_status(mobile_status))
-
-    print cell_response['order']
-    print mobile_response['order']
+    while 1:
+        # Robot sends its status to MES-server
+        mobile_response = (server.mobile_status(mobile_status))
+        emulate_mobile_robot(mobile_response)
 
 if __name__ == "__main__":
     main()

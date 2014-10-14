@@ -55,8 +55,7 @@ def mobile_status(m_status):
     if order != 0:
         print robot_name, ' has received an order #', order_id
 
-        if m_status['state'] == 'STATE_FREE'\
-                or m_status['state'] == 'STATE_WORKING':
+        if m_status['state'] == 'STATE_FREE' or m_status['state'] == 'STATE_WORKING':
             command = resource_handler.get_command_m(robot_name, m_status)
 
             if command == 0:
@@ -101,11 +100,11 @@ def mobile_status(m_status):
 
 
 def cell_status(c_status):
-    for k, v in c_status.items():
-        print k, ' = ', v
+    #for k, v in c_status.items():
+    #    print k, ' = ', v
 
     # Save state information
-    robot_id = c_status['robot_id']
+    robot_id = c_status['cell_id']
     robot_name = Resources.get_cell_robot_name(robot_id)
     order = resource_handler.get_cell_robot(robot_id).bound_to_order
     if order != 0:
@@ -197,7 +196,7 @@ def main():
 
     # generate order
     l = task.LoopingCall(generate_order)
-    l.start(10.0)  # call every second
+    l.start(1.0)  # call every second
 
     # l.stop() will stop the looping calls
     reactor.run()

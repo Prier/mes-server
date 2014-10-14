@@ -11,6 +11,7 @@ OS_SORT = 6
 OS_WAIT_FOR_MOBILE = 7
 OS_LOAD = 8
 
+alloc_areas = []
 
 class MesResource():
     def __init__(self, to_dispenser, to_cell):
@@ -25,7 +26,8 @@ class Order():
         self.order = order
         self.allocated_cell = 0
         self.allocated_robot = robot
-        self.allocated_areas = [starting_area]
+        alloc_areas.append(starting_area)
+        self.allocated_areas = alloc_areas
         resources[starting_area].taken = True
         resources[starting_area].bound_to_order = self
         resources[robot].bound_to_order = self
