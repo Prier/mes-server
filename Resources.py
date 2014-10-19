@@ -121,7 +121,8 @@ class ResourceHandler():
         elif current_order.status == OS_TO_DISP:
             current_order.allocate(self.resources, current_pos, robot_name)
             next_pos = self.resources[current_pos].to_dispenser
-            if next_pos == 0:  # at the dispenser
+            if next_pos == 1:  # at the dispenser
+                print 'at dispenser'
                 current_order.status = OS_WAIT_FOR_DISP
                 command = {
                     'command': 'COMMAND_WAIT'
@@ -152,20 +153,21 @@ class ResourceHandler():
         elif current_order.status == OS_TO_CELL:
             current_order.allocate(self.resources, current_pos, robot_name)
             next_pos = self.resources[current_pos].to_cell
-            if next_pos == 0:  # at a cell
+            if next_pos == 1:  # at a cell
                 current_order.status = OS_WAIT_FOR_CELL
                 command = {
                     'command': 'COMMAND_WAIT'
                 }
-            elif next_pos == 1:  # next to the three cells
-                if not self.resources['Station1'].taken:
-                    next_pos = 'Station1'
+
+            elif next_pos == 2:  # next to the three cells
+                if not self.resources['LoadOff1'].taken:
+                    next_pos = 'LoadOff1'
                     current_order.allocate_cell(self.resources, 'Cell1')
-                elif not self.resources['Station2'].taken:
-                    next_pos = 'Station2'
+                elif not self.resources['LoadOff2'].taken:
+                    next_pos = 'LoadOff2'
                     current_order.allocate_cell(self.resources, 'Cell2')
-                elif not self.resources['Station3'].taken:
-                    next_pos = 'Station3'
+                elif not self.resources['LoadOff3'].taken:
+                    next_pos = 'LoadOff3'
                     current_order.allocate_cell(self.resources, 'Cell3')
                 else:
                     next_pos = 0

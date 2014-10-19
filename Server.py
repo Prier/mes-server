@@ -53,7 +53,7 @@ def mobile_status(m_status):
     robot_name = Resources.get_mobile_robot_name(robot_id)
     order = resource_handler.get_mobile_robot(robot_id).bound_to_order
     if order != 0:
-        print robot_name, ' has received an order #', order_id
+        print robot_name, ' has received an order #', resource_handler.resources[robot_name].bound_to_order.order['order_id']
 
         if m_status['state'] == 'STATE_FREE' or m_status['state'] == 'STATE_WORKING':
             command = resource_handler.get_command_m(robot_name, m_status)
@@ -62,7 +62,8 @@ def mobile_status(m_status):
                 command = {
                     'command': 'COMMAND_WAIT'
                 }
-            print robot_name, ' is waiting\n'
+                print robot_name, ' is waiting\n'
+            print robot_name, ' got: '+command['command']+'\n'
             return command
 
         elif m_status['state'] == 'STATE_ERROR':
