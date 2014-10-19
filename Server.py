@@ -62,7 +62,8 @@ def mobile_status(m_status):
                 command = {
                     'command': 'COMMAND_WAIT'
                 }
-            print robot_name, ' is waiting\n'
+                print robot_name, ' is waiting\n'
+            print robot_name, ' got: '+command['command']+'\n'
             return command
 
         elif m_status['state'] == 'STATE_ERROR':
@@ -196,7 +197,7 @@ def main():
 
     # generate order
     l = task.LoopingCall(generate_order)
-    l.start(1.0)  # call every second
+    l.start(200.0)  # call every second
 
     # l.stop() will stop the looping calls
     reactor.run()
