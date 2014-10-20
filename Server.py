@@ -197,7 +197,7 @@ def main():
 
     # generate order
     l = task.LoopingCall(generate_order)
-    l.start(1.0)  # call every second
+    l.start(200.0)  # call every second
 
     # l.stop() will stop the looping calls
     reactor.run()
