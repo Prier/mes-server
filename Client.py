@@ -22,18 +22,40 @@ mobile_status = {
     'state': 'STATE_FREE',
     'time': str(today),
     'battery': 80,
-    'position': "Floor",
+    'position': "Station3",
     'status': "Human readable status message.."
 }
 
 done = False
+
+def emulate_cell_robot(c_response):
+
+    # Command state-machine for workcell
+
+    print "Received Workcell command: " + c_response['command']
+
+    if c_response['command'] == 'COMMAND_WAIT':
+        cell_status['state'] = 'STATE_FREE'
+
+    elif c_response['command'] == 'COMMAND_SORTBRICKS':
+        cell_status['state'] = 'STATE_WORKING'
+
+    elif c_response['command'] == 'COMMAND_LOADBRICKS':
+        cell_status['state'] = 'STATE_WORKING'
+
+    elif c_response['command'] == 'COMMAND_ABORT':
+        cell_status['state'] = 'STATE_FREE'
+
+    if cell_status['state'] == 'STATE_FREE':
+        print "Workcell state is: 'STATE_FREE'"
+
 
 def emulate_mobile_robot(m_response):
     global done
 
     # Command state-machine for mobile robot
 
-    print "Received command: " + m_response['command']
+    print "Received Mobile command: " + m_response['command']
 
     if m_response['command'] == 'COMMAND_WAIT':
         mobile_status['state'] = 'STATE_FREE'
@@ -50,10 +72,10 @@ def emulate_mobile_robot(m_response):
 
     # State-machine for the current mobile robot state
     if mobile_status['state'] == 'STATE_FREE':
-        print "My state is: 'STATE_FREE'"
+        print "Mobile state is: 'STATE_FREE'"
 
     elif mobile_status['state'] == 'STATE_WORKING' and not done:
-        print "My state is: 'STATE_WORKING'"
+        print "Mobile state is: 'STATE_WORKING'"
         if m_response['command'] == 'COMMAND_TIP':
             # Tip of those bricks!
             print 'Tipping off bricks...'
@@ -78,10 +100,14 @@ def emulate_workcell():
 
 def main():
     while True:
-        print "My state is: " + mobile_status['state']
+        print "Mobile state is: " + mobile_status['state']
         # Robot sends its status to MES-server every 2 seconds
         mobile_response = (server.mobile_status(mobile_status))
         emulate_mobile_robot(mobile_response)
+        # Workcell sends its status to MES-server every 2 seconds
+        print "Workcell state is: " + cell_status['state']
+        workcell_response = (server.cell_status(cell_status))
+        emulate_cell_robot(workcell_response)
         time.sleep(2)  # Delay for 2 seconds
 
 if __name__ == "__main__":

@@ -11,8 +11,6 @@ OS_SORT = 6
 OS_WAIT_FOR_MOBILE = 7
 OS_LOAD = 8
 
-alloc_areas = []
-
 class MesResource():
     def __init__(self, to_dispenser, to_cell):
         self.taken = False
@@ -22,15 +20,18 @@ class MesResource():
 
 
 class Order():
-    def __init__(self, resources, starting_area, order, robot):
+    def __init__(self, resources, starting_area, order, robot, cell):
         self.order = order
-        self.allocated_cell = 0
+        self.allocated_cell = cell
         self.allocated_robot = robot
-        alloc_areas.append(starting_area)
-        self.allocated_areas = alloc_areas
+        self.allocated_areas = []
+        self.allocated_areas.append(starting_area)
         resources[starting_area].taken = True
         resources[starting_area].bound_to_order = self
         resources[robot].bound_to_order = self
+        resources[robot].taken = True
+        resources[cell].bound_to_order = self
+        resources[cell].taken = True
         self.status = OS_NOT_STARTED
 
     def allocate(self, resources, area, robot):
@@ -43,13 +44,16 @@ class Order():
     def deallocate(self, resources):
         for area in self.allocated_areas:
             resources[area].taken = False
+            resources[area].bound_to_order = 0
         self.allocated_areas = []
         resources[self.allocated_robot].bound_to_order = 0
+        resources[self.allocated_robot].taken = False
+        self.allocated_robot = 0
 
-    def allocate_cell(self, resources, cell):
-        self.allocated_cell = cell
-        resources[cell].taken = True
-        resources[cell].bound_to_order = self
+#    def allocate_cell(self, resources, cell):
+#        self.allocated_cell = cell
+#        resources[cell].taken = True
+#        resources[cell].bound_to_order = self
 
     def deallocate_cell(self, resources):
         resources[self.allocated_cell].taken = False
@@ -86,19 +90,33 @@ class ResourceHandler():
     def get_cell_robot(self, number):
         return self.resources['Cell'+str(number)]
 
-    def get_new_command_m(self, next_order, robot_name, m_status):
+    def get_order(self, robot_name, m_status, order_queue):
         current_pos = m_status['position']
-        new_order = Order(self.resources, current_pos, next_order, robot_name)
-        next_pos = self.resources[current_pos].to_dispenser
-        command = 0
-        if not self.resources[next_pos].taken:
-            new_order.allocate(self.resources, next_pos, robot_name)
-            new_order.status = OS_TO_DISP
-            command = {
-                'command': 'COMMAND_NAVIGATE',
-                'path': next_pos
-            }
-        return command
+        order = self.resources['Cell1'].bound_to_order
+        if order == 0:
+            order = self.resources['Cell2'].bound_to_order
+        if order == 0:
+            order = self.resources['Cell3'].bound_to_order
+
+        if order != 0:
+            if order.status == OS_WAIT_FOR_MOBILE:
+                order.allocate(self.resources, current_pos, robot_name)
+        else:
+            free_cell = 0
+            if self.resources['Cell1'].bound_to_order == 0:
+                free_cell = 'Cell1'
+            if free_cell == 0:
+                if self.resources['Cell2'].bound_to_order == 0:
+                    free_cell = 'Cell2'
+            if free_cell == 0:
+                if self.resources['Cell3'].bound_to_order == 0:
+                    free_cell = 'Cell3'
+            if free_cell != 0:
+                if not order_queue.empty():
+                    order = order_queue.get()
+                    order = Order(self.resources, current_pos, order, robot_name, free_cell)
+
+        return order
 
     def get_command_m(self, robot_name, m_status):
         current_order = self.resources[robot_name].bound_to_order
@@ -160,15 +178,12 @@ class ResourceHandler():
                 }
 
             elif next_pos == 2:  # next to the three cells
-                if not self.resources['LoadOff1'].taken:
+                if current_order.allocated_cell == 'Cell1':
                     next_pos = 'LoadOff1'
-                    current_order.allocate_cell(self.resources, 'Cell1')
-                elif not self.resources['LoadOff2'].taken:
+                elif current_order.allocated_cell == 'Cell2':
                     next_pos = 'LoadOff2'
-                    current_order.allocate_cell(self.resources, 'Cell2')
-                elif not self.resources['LoadOff3'].taken:
+                elif current_order.allocated_cell == 'Cell3':
                     next_pos = 'LoadOff3'
-                    current_order.allocate_cell(self.resources, 'Cell3')
                 else:
                     next_pos = 0
                 if next_pos != 0:
@@ -221,7 +236,7 @@ class ResourceHandler():
     def get_command_c(self, robot_name, c_status):
         current_order = self.resources[robot_name].bound_to_order
         current_state = c_status['state']
-        current_order.deallocate(self.resources)
+        #current_order.deallocate(self.resources)
 
         if current_order.status == OS_SORT:
             #TODO

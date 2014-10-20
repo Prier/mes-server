@@ -53,7 +53,7 @@ def mobile_status(m_status):
     robot_name = Resources.get_mobile_robot_name(robot_id)
     order = resource_handler.get_mobile_robot(robot_id).bound_to_order
     if order != 0:
-        print robot_name, ' has received an order #', resource_handler.resources[robot_name].bound_to_order.order['order_id']
+        print robot_name, ' is working on order #', resource_handler.resources[robot_name].bound_to_order.order['order_id']
 
         if m_status['state'] == 'STATE_FREE' or m_status['state'] == 'STATE_WORKING':
             command = resource_handler.get_command_m(robot_name, m_status)
@@ -73,12 +73,12 @@ def mobile_status(m_status):
             return dict(command='COMMAND_ABORT')
     else:
         if m_status['state'] == 'STATE_FREE':
-            next_order = fetch_order()
-            command = 0
             print robot_name, ' is available\n'
 
-            if next_order != 0:
-                command = resource_handler.get_new_command_m(next_order, robot_name, m_status)
+            new_order = resource_handler.get_order(robot_name, m_status, order_queue)
+            command = 0
+            if new_order != 0:
+                command = resource_handler.get_command_m(robot_name, m_status)
 
             if command == 0:
                 command = {
@@ -101,13 +101,13 @@ def mobile_status(m_status):
 
 
 def cell_status(c_status):
-    #for k, v in c_status.items():
-    #    print k, ' = ', v
+    for k, v in c_status.items():
+        print k, ' = ', v
 
     # Save state information
-    robot_id = c_status['cell_id']
-    robot_name = Resources.get_cell_robot_name(robot_id)
-    order = resource_handler.get_cell_robot(robot_id).bound_to_order
+    cell_id = c_status['cell_id']
+    robot_name = Resources.get_cell_robot_name(cell_id)
+    order = resource_handler.get_cell_robot(cell_id).bound_to_order
     if order != 0:
         print robot_name, ' is working on order #', order['order_id']
         if c_status['state'] == 'STATE_FREE':
@@ -125,7 +125,7 @@ def cell_status(c_status):
             resource_handler.update_state('order_sorted')
             return dict(command='COMMAND_WAIT')
 
-        elif c_status['state'] == 'STATE_FINISHEDLOADING':
+        elif c_status['state'] == 'STATE_LOADING':
             print robot_name, ' loaded bricks\n'
             resource_handler.update_state('order_loaded')
             return dict(command='COMMAND_WAIT')
@@ -139,13 +139,11 @@ def cell_status(c_status):
             return dict(command='COMMAND_ABORT')
     else:
         if c_status['state'] == 'STATE_FREE':
-            command = resource_handler.get_command_c(robot_name, c_status)
 
-            if command == 0:
-                command = {
-                    'command': 'COMMAND_WAIT'
-                }
-                print robot_name, ' is waiting\n'
+            command = {
+                'command': 'COMMAND_WAIT'
+            }
+            print robot_name, ' is waiting\n'
             return command
 
         elif c_status['state'] == 'STATE_ORDERSORTED':  # shouldn't happen
@@ -197,7 +195,7 @@ def main():
 
     # generate order
     l = task.LoopingCall(generate_order)
-    l.start(200.0)  # call every second
+    l.start(2.0)  # call every second
 
     # l.stop() will stop the looping calls
     reactor.run()
