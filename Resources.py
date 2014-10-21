@@ -178,14 +178,14 @@ class ResourceHandler():
                 }
 
             elif next_pos == 2:  # next to the three cells
+                next_pos = 0
                 if current_order.allocated_cell == 'Cell1':
                     next_pos = 'LoadOff1'
                 elif current_order.allocated_cell == 'Cell2':
                     next_pos = 'LoadOff2'
                 elif current_order.allocated_cell == 'Cell3':
                     next_pos = 'LoadOff3'
-                else:
-                    next_pos = 0
+
                 if next_pos != 0:
                     if not self.resources[next_pos].taken:
                         current_order.allocate(self.resources, next_pos, robot_name)
@@ -195,6 +195,9 @@ class ResourceHandler():
                         }
                     else:
                         current_order.deallocate_cell(self.resources)
+                else:
+                    #this really shouldn't happen!
+                    next_pos = next_pos
             else:
                 if not self.resources[next_pos].taken:
                     current_order.allocate(self.resources, next_pos, robot_name)
@@ -222,6 +225,45 @@ class ResourceHandler():
             #  we shouldn't get here from the mobile platform
             print 'Something\'s wrong here'
             print 'processed command for order status OS_SORT'
+
+        elif current_order.status == OS_WAIT_FOR_MOBILE:
+            current_order.allocate(self.resources, current_pos, robot_name)
+            next_pos = self.resources[current_pos].to_cell
+            if next_pos == 1:  # at a cell
+                current_order.status = OS_LOAD
+                command = {
+                    'command': 'COMMAND_WAIT'
+                }
+
+            elif next_pos == 2:  # next to the three cells
+                next_pos = 0
+                if current_order.allocated_cell == 'Cell1':
+                    next_pos = 'LoadOff1'
+                elif current_order.allocated_cell == 'Cell2':
+                    next_pos = 'LoadOff2'
+                elif current_order.allocated_cell == 'Cell3':
+                    next_pos = 'LoadOff3'
+
+                if next_pos != 0:
+                    if not self.resources[next_pos].taken:
+                        current_order.allocate(self.resources, next_pos, robot_name)
+                        command = {
+                            'command': 'COMMAND_NAVIGATE',
+                            'path': next_pos
+                        }
+                    else:
+                        current_order.deallocate_cell(self.resources)
+                else:
+                    #this really shouldn't happen!
+                    next_pos = next_pos
+            else:
+                if not self.resources[next_pos].taken:
+                    current_order.allocate(self.resources, next_pos, robot_name)
+                    command = {
+                        'command': 'COMMAND_NAVIGATE',
+                        'path': next_pos
+                    }
+            print 'processed command for order status OS_WAIT_FOR_MOBILE'
 
         else:
             print 'unknown order status'
