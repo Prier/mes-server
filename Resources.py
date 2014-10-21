@@ -6,11 +6,13 @@ OS_TO_DISP = 1
 OS_WAIT_FOR_DISP = 2
 OS_TO_CELL = 3
 OS_WAIT_FOR_CELL = 4
-OS_TIP = 5
-OS_SORT = 6
-OS_WAIT_FOR_MOBILE = 7
-OS_LOAD = 8
-OS_RETURN = 9
+OS_READY_TO_SORT = 5
+OS_TIP = 6
+OS_SORTING = 7
+OS_WAIT_FOR_MOBILE = 8
+OS_LOAD = 9
+OS_LOADING_NAUW = 10
+OS_RETURN = 11
 
 class MesResource():
     def __init__(self, to_dispenser, to_cell):
@@ -51,12 +53,21 @@ class Order():
         resources[self.allocated_robot].taken = False
         self.allocated_robot = 0
 
-#    def allocate_cell(self, resources, cell):
-#        self.allocated_cell = cell
-#        resources[cell].taken = True
-#        resources[cell].bound_to_order = self
-
     def deallocate_cell(self, resources):
+        resources[self.allocated_cell].taken = False
+        resources[self.allocated_cell].bound_to_order = 0
+        self.allocated_cell = 0
+
+    def end(self, resources):
+        self.order = 0
+        self.status = 0
+        for area in self.allocated_areas:
+            resources[area].taken = False
+            resources[area].bound_to_order = 0
+        self.allocated_areas = []
+        resources[self.allocated_robot].bound_to_order = 0
+        resources[self.allocated_robot].taken = False
+        self.allocated_robot = 0
         resources[self.allocated_cell].taken = False
         resources[self.allocated_cell].bound_to_order = 0
         self.allocated_cell = 0
@@ -101,6 +112,8 @@ class ResourceHandler():
 
         if order != 0:
             if order.status == OS_WAIT_FOR_MOBILE:
+                order.allocate(self.resources, current_pos, robot_name)
+            elif order.status == OS_TO_DISP and order.allocated_robot == 0:
                 order.allocate(self.resources, current_pos, robot_name)
         else:
             free_cell = 0
@@ -210,19 +223,24 @@ class ResourceHandler():
 
         elif current_order.status == OS_WAIT_FOR_CELL:
             current_order.allocate(self.resources, current_pos, robot_name)
-            cell_has_started = True  # TODO: check cell has started
-            if cell_has_started:
-                current_order.status = OS_TIP
-                command = {
-                    'command': 'COMMAND_TIP'
-                }
+            command = {
+                'command': 'COMMAND_WAIT'
+            }
+            print 'processed mobile command for order status OS_WAIT_FOR_CELL'
+
+        elif current_order.status == OS_READY_TO_SORT:
+            current_order.allocate(self.resources, current_pos, robot_name)
+            current_order.status = OS_TIP
+            command = {
+                'command': 'COMMAND_TIP'
+            }
             print 'processed mobile command for order status OS_WAIT_FOR_CELL'
 
         elif current_order.status == OS_TIP:
-            current_order.status = OS_SORT
+            current_order.status = OS_SORTING
             print 'processed mobile command for order status OS_TIP'
 
-        elif current_order.status == OS_SORT:
+        elif current_order.status == OS_SORTING:
             #  we shouldn't get here from the mobile platform
             print 'I AM ERROR: Mobile platform bound to order that is sorting'
 
@@ -273,6 +291,7 @@ class ResourceHandler():
 
         elif current_order.status == OS_RETURN:
             #TODO: Find out what the mobile robot is actually supposed to do with the bricks
+            current_order.end(self.resources)
 
             #current_order.allocate(self.resources, current_pos, robot_name)
             #next_pos = self.resources[current_pos].to_dispenser
@@ -301,41 +320,92 @@ class ResourceHandler():
         print 'Finished finding command'
         return command
 
-    def get_command_c(self, robot_name, c_status):
+    def get_command_c_free(self, robot_name, c_status):
         current_order = self.resources[robot_name].bound_to_order
-        current_state = c_status['state']
-        #current_order.deallocate(self.resources)
+        command = 0
 
-        if current_order.status == OS_SORT:
-            #TODO
+        if current_order.status == OS_WAIT_FOR_CELL:
+            command = {
+                'command': 'COMMAND_SORTBRICKS',
+                'order': current_order.order
+            }
             print 'Processed command for OS_SORT'
         elif current_order.status == OS_LOAD:
-            #TODO
+            command = dict(command='COMMAND_LOADBRICKS')
             print 'Processed command for OS_LOAD'
         elif current_order.status == OS_WAIT_FOR_MOBILE:
-            #TODO
+            command = dict(command='COMMAND_WAIT')
             print 'processed command for OS_WAIT_FOR_MOBILE'
+        elif current_order.status == OS_LOADING_NAUW:
+            current_order.status = OS_RETURN
+            command = dict(command='COMMAND_WAIT')
+            print 'processed command for OS_LOADING_NAUW'
         else:
-            #TODO
             print 'No commands processed'
 
-    def done_sorting(self, robot_name):
-        current_order = self.resources[robot_name].bound_to_order
+        return command
 
-        if current_order.status == OS_SORT:
-            current_order.status = OS_LOAD
-            print 'Updated state from OS_SORT to OS_LOAD'
+    def get_command_c_sorting(self, robot_name):
+        current_order = self.resources[robot_name].bound_to_order
+        command = 0
+
+        if current_order.status == OS_READY_TO_SORT:
+            current_order.status = OS_SORTING
+            command = dict(command='COMMAND_SORTBRICKS')
+            print 'Updated state from OS_READY_TO_SORT to OS_SORTING'
+        elif current_order.status == OS_SORTING:
+            command = dict(command='COMMAND_SORTBRICKS')
+            print 'Still sorting'
         else:
-            print 'I AM ERROR: Robot reports done sorting, but it shouldn\'t have been sorting'
+            print 'I AM ERROR.'
 
-    def out_of_bricks(self, robot_name):
+        return command
+
+    def get_command_c_done_sorting(self, robot_name):
         current_order = self.resources[robot_name].bound_to_order
+        command = 0
 
-        if current_order.status == OS_SORT:
+        if current_order.status == OS_SORTING:
+            current_order.status = OS_WAIT_FOR_MOBILE
+            command = dict(command='COMMAND_WAIT')
+            print 'Updated state from OS_SORT to OS_WAIT_FOR_MOBILE'
+        elif current_order.status == OS_WAIT_FOR_MOBILE:
+            command = dict(command='COMMAND_WAIT')
+            print 'Still waiting for mobile'
+        elif current_order.status == OS_LOAD:
+            command = dict(command='COMMAND_LOADBRICKS')
+            print 'Start loading bricks'
+        else:
+            print 'I AM ERROR.'
+
+        return command
+
+    def get_command_c_out_of_bricks(self, robot_name):
+        current_order = self.resources[robot_name].bound_to_order
+        command = 0
+
+        if current_order.status == OS_SORTING:
             current_order.status = OS_TO_DISP
             print 'Updated state from OS_SORT to OS_TO_DISP'
+        elif current_order.status == OS_WAIT_FOR_CELL:
+            command = {
+                'command': 'COMMAND_SORTBRICKS',
+                'order': current_order.order
+            }
+            print 'Processed command for OS_WAIT_FOR_CELL'
         else:
-            print 'I AM ERROR: Robot reports out of bricks, but it shouldn\'t have been sorting'
+            print 'No commands processed'
+
+        return command
+
+    def get_command_c_loading_bricks(self, robot_name):
+        current_order = self.resources[robot_name].bound_to_order
+
+        if current_order.status == OS_LOAD:
+            current_order.status = OS_LOADING_NAUW
+            print 'Updated state from OS_LOAD to OS_LOADING_NAUW'
+        else:
+            print 'I AM ERROR.'
 
 
 def get_mobile_robot_name(number):

@@ -111,8 +111,18 @@ def cell_status(c_status):
     if order != 0:
         print robot_name, ' is working on order #', order['order_id']
         if c_status['state'] == 'STATE_FREE':
-            command = resource_handler.get_command_c(robot_name, c_status)
+            command = resource_handler.get_command_c_free(robot_name, c_status)
 
+            if command == 0:
+                command = {
+                    'command': 'COMMAND_WAIT'
+                }
+                print robot_name, ' is waiting\n'
+            return command
+
+        elif c_status['state'] == 'STATE_SORTING':
+            print robot_name, ' is sorting\n'
+            command = resource_handler.get_command_c_sorting(robot_name)
             if command == 0:
                 command = {
                     'command': 'COMMAND_WAIT'
@@ -122,18 +132,33 @@ def cell_status(c_status):
 
         elif c_status['state'] == 'STATE_ORDERSORTED':
             print robot_name, ' is done sorting\n'
-            resource_handler.done_sorting(robot_name)
-            return dict(command='COMMAND_WAIT')
+            command = resource_handler.get_command_c_done_sorting(robot_name)
+            if command == 0:
+                command = {
+                    'command': 'COMMAND_WAIT'
+                }
+                print robot_name, ' is waiting\n'
+            return command
 
         elif c_status['state'] == 'STATE_OUTOFBRICKS':
             print robot_name, ' is out of bricks\n'
-            resource_handler.out_of_bricks(robot_name)
-            return dict(command='COMMAND_wait')
+            command = resource_handler.get_command_c_out_of_bricks(robot_name)
+            if command == 0:
+                command = {
+                    'command': 'COMMAND_WAIT'
+                }
+                print robot_name, ' is waiting\n'
+            return command
 
         elif c_status['state'] == 'STATE_LOADING':
             print robot_name, ' is loading bricks\n'
-            #TODO: do shit
-            return dict(command='COMMAND_LOADBRICKS')
+            command = resource_handler.get_command_c_loading_bricks(robot_name)
+            if command == 0:
+                command = {
+                    'command': 'COMMAND_WAIT'
+                }
+                print robot_name, ' is waiting\n'
+            return command
 
         elif c_status['state'] == 'STATE_ERROR':
             print robot_name, ' has encountered an error! ABORTING...\n'
