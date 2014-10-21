@@ -4,6 +4,7 @@ __author__ = 'prier'
 import xmlrpclib
 import datetime
 import time
+import random
 
 server = xmlrpclib.ServerProxy('http://localhost:8000', use_datetime=True)
 today = datetime.datetime.today()
@@ -27,27 +28,64 @@ mobile_status = {
 }
 
 done = False
+sortingdone = False
+loadingdone = False
 
 def emulate_cell_robot(c_response):
-
+    global sortingdone
+    global loadingdone
     # Command state-machine for workcell
 
     print "Received Workcell command: " + c_response['command']
 
     if c_response['command'] == 'COMMAND_WAIT':
-        cell_status['state'] = 'STATE_FREE'
+        if cell_status['state'] == 'STATE_OUTOFBRICKS':
+            cell_status['state'] = 'STATE_OUTOFBRICKS'
+        else:
+            cell_status['state'] = 'STATE_FREE'
 
     elif c_response['command'] == 'COMMAND_SORTBRICKS':
-        cell_status['state'] = 'STATE_WORKING'
+        cell_status['state'] = 'STATE_SORTING'
 
     elif c_response['command'] == 'COMMAND_LOADBRICKS':
-        cell_status['state'] = 'STATE_WORKING'
+        cell_status['state'] = 'STATE_LOADING'
 
     elif c_response['command'] == 'COMMAND_ABORT':
         cell_status['state'] = 'STATE_FREE'
 
     if cell_status['state'] == 'STATE_FREE':
         print "Workcell state is: 'STATE_FREE'"
+
+    elif cell_status['state'] == 'STATE_SORTING':
+        print "Workcell state is: 'STATE_SORTING'"
+        if not sortingdone:
+            print "Sorting bricks..."
+            time.sleep(5)
+            if random.randint(0, 10) < 5:
+                sortingdone = True
+
+            if sortingdone:
+                cell_status['state'] = 'STATE_ORDERSORTED'
+            else:
+                cell_status['state'] = 'STATE_OUTOFBRICKS'
+        else:
+            cell_status['state'] = 'STATE_ORDERSORTED'
+
+    elif cell_status['state'] == 'STATE_OUTOFBRICKS':
+        print "Workcell state is: 'STATE_OUTOFBRICKS'"
+
+    elif cell_status['state'] == 'STATE_LOADING':
+        print "Workcell state is: 'STATE_LOADING'"
+        print "Loading bricks onto Mobile robot..."
+        time.sleep(3)
+        loadingdone = True
+        if loadingdone:
+            cell_status['state'] = 'STATE_FREE'
+
+    if cell_status['state'] == 'STATE_ORDERSORTED':
+        print "Workcell state is: 'STATE_ORDERSORTED'"
+        print "Order is sorted..."
+        cell_status['state'] = 'STATE_LOADING'
 
 
 def emulate_mobile_robot(m_response):

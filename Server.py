@@ -32,7 +32,7 @@ def generate_order():
     order = {
         'order_id': order_id,
         'bricks':
-            dict(color_red=random.randint(3, 8), color_blue=random.randint(3, 8), color_yellow=random.randint(3, 8)),
+            dict(color_red=random.randint(0, 8), color_blue=random.randint(0, 8), color_yellow=random.randint(0, 8)),
         'time': str(datetime.datetime.today())
     }
     order_queue.put(order)
