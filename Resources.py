@@ -13,9 +13,11 @@ OS_WAIT_FOR_MOBILE = 8
 OS_LOAD = 9
 OS_LOADING_NAUW = 10
 OS_RETURN = 11
+OS_FINALIZE = 12
 
 class MesResource():
     def __init__(self, to_dispenser, to_cell):
+        self.alive = False
         self.taken = False
         self.bound_to_order = 0
         self.to_dispenser = to_dispenser
@@ -58,19 +60,19 @@ class Order():
         resources[self.allocated_cell].bound_to_order = 0
         self.allocated_cell = 0
 
-    def end(self, resources):
-        self.order = 0
-        self.status = 0
-        for area in self.allocated_areas:
-            resources[area].taken = False
-            resources[area].bound_to_order = 0
-        self.allocated_areas = []
-        resources[self.allocated_robot].bound_to_order = 0
-        resources[self.allocated_robot].taken = False
-        self.allocated_robot = 0
-        resources[self.allocated_cell].taken = False
-        resources[self.allocated_cell].bound_to_order = 0
-        self.allocated_cell = 0
+#    def end(self, resources):
+#        self.order = 0
+#        self.status = 0
+#        for area in self.allocated_areas:
+#            resources[area].taken = False
+#            resources[area].bound_to_order = 0
+#        self.allocated_areas = []
+#        resources[self.allocated_robot].bound_to_order = 0
+#        resources[self.allocated_robot].taken = False
+#        self.allocated_robot = 0
+#        resources[self.allocated_cell].taken = False
+#        resources[self.allocated_cell].bound_to_order = 0
+#        self.allocated_cell = 0
 
 
 class ResourceHandler():
@@ -104,10 +106,12 @@ class ResourceHandler():
 
     def get_order(self, robot_name, m_status, order_queue):
         current_pos = m_status['position']
-        order = self.resources['Cell1'].bound_to_order
-        if order == 0:
+        order = 0
+        if order == 0 and self.resources['Cell1'].alive:
+            order = self.resources['Cell1'].bound_to_order
+        if order == 0 and self.resources['Cell2'].alive:
             order = self.resources['Cell2'].bound_to_order
-        if order == 0:
+        if order == 0 and self.resources['Cell3'].alive:
             order = self.resources['Cell3'].bound_to_order
 
         if order != 0:
@@ -115,15 +119,18 @@ class ResourceHandler():
                 order.allocate(self.resources, current_pos, robot_name)
             elif order.status == OS_TO_DISP and order.allocated_robot == 0:
                 order.allocate(self.resources, current_pos, robot_name)
-        else:
+            else:
+                order = 0
+
+        if order == 0:
             free_cell = 0
-            if self.resources['Cell1'].bound_to_order == 0:
+            if self.resources['Cell1'].bound_to_order == 0 and self.resources['Cell1'].alive:
                 free_cell = 'Cell1'
             if free_cell == 0:
-                if self.resources['Cell2'].bound_to_order == 0:
+                if self.resources['Cell2'].bound_to_order == 0 and self.resources['Cell2'].alive:
                     free_cell = 'Cell2'
             if free_cell == 0:
-                if self.resources['Cell3'].bound_to_order == 0:
+                if self.resources['Cell3'].bound_to_order == 0 and self.resources['Cell3'].alive:
                     free_cell = 'Cell3'
             if free_cell != 0:
                 if not order_queue.empty():
@@ -141,13 +148,21 @@ class ResourceHandler():
         if current_order.status == OS_NOT_STARTED:
             next_pos = self.resources[current_pos].to_dispenser
             current_order.allocate(self.resources, current_pos, robot_name)
-            if not self.resources[next_pos].taken:
+            if next_pos == 1:
+                print 'at dispenser'
+                current_order.status = OS_WAIT_FOR_DISP
+                command = {
+                    'command': 'COMMAND_WAIT'
+                }
+            elif not self.resources[next_pos].taken:
                 current_order.allocate(self.resources, next_pos, robot_name)
                 current_order.status = OS_TO_DISP
                 command = {
                     'command': 'COMMAND_NAVIGATE',
                     'path': next_pos
                 }
+            else:
+                command = 0
             print 'processed mobile command for order status OS_NOT_STARTED'
 
         elif current_order.status == OS_TO_DISP:
@@ -223,26 +238,30 @@ class ResourceHandler():
 
         elif current_order.status == OS_WAIT_FOR_CELL:
             current_order.allocate(self.resources, current_pos, robot_name)
+            #current_order.status = OS_READY_TO_SORT
             command = {
                 'command': 'COMMAND_WAIT'
             }
             print 'processed mobile command for order status OS_WAIT_FOR_CELL'
 
-        elif current_order.status == OS_READY_TO_SORT:
+        elif current_order.status == OS_SORTING:
             current_order.allocate(self.resources, current_pos, robot_name)
             current_order.status = OS_TIP
-            command = {
-                'command': 'COMMAND_TIP'
-            }
             print 'processed mobile command for order status OS_WAIT_FOR_CELL'
 
         elif current_order.status == OS_TIP:
+            command = {
+                'command': 'COMMAND_TIP'
+            }
             current_order.status = OS_SORTING
             print 'processed mobile command for order status OS_TIP'
 
-        elif current_order.status == OS_SORTING:
-            #  we shouldn't get here from the mobile platform
-            print 'I AM ERROR: Mobile platform bound to order that is sorting'
+        elif current_order.status == OS_READY_TO_SORT:
+            current_order.allocate(self.resources, current_pos, robot_name)
+            command = {
+                'command': 'COMMAND_WAIT'
+            }
+            print 'processed mobile command for order status OS_READY_TO_SORT'
 
         elif current_order.status == OS_WAIT_FOR_MOBILE:
             current_order.allocate(self.resources, current_pos, robot_name)
@@ -284,30 +303,47 @@ class ResourceHandler():
             print 'processed mobile command for order status OS_WAIT_FOR_MOBILE'
 
         elif current_order.status == OS_LOAD:
+            current_order.allocate(self.resources, current_pos, robot_name)
             command = {
                 'command': 'COMMAND_WAIT'
             }
             print 'processed mobile command for order status OS_LOAD'
 
+        elif current_order.status == OS_LOADING_NAUW:
+            current_order.allocate(self.resources, current_pos, robot_name)
+            command = {
+                'command': 'COMMAND_WAIT'
+            }
+            print 'processed mobile command for order status OS_LOADING_NAUW'
+
         elif current_order.status == OS_RETURN:
             #TODO: Find out what the mobile robot is actually supposed to do with the bricks
-            current_order.end(self.resources)
+            #current_order.end(self.resources)
 
-            #current_order.allocate(self.resources, current_pos, robot_name)
-            #next_pos = self.resources[current_pos].to_dispenser
-            #if next_pos == 1:  # at the dispenser
-            #    print 'At dispenser for drop-off'
-            #
-            #    command = {
-            #        'command': 'COMMAND_WAIT'
-            #    }
-            #else:
-            #    if not self.resources[next_pos].taken:
-            #        current_order.allocate(self.resources, next_pos, robot_name)
-            #        command = {
-            #            'command': 'COMMAND_NAVIGATE',
-            #            'path': next_pos
-            #        }
+            current_order.allocate(self.resources, current_pos, robot_name)
+            next_pos = self.resources[current_pos].to_dispenser
+            if next_pos == 1:  # at the dispenser
+                print 'at dispenser'
+                current_order.status = OS_FINALIZE
+                command = {
+                    'command': 'COMMAND_WAIT'
+                }
+            else:
+                if not self.resources[next_pos].taken:
+                    current_order.allocate(self.resources, next_pos, robot_name)
+                    command = {
+                        'command': 'COMMAND_NAVIGATE',
+                        'path': next_pos
+                    }
+            print 'processed mobile command for order status OS_RETURN'
+
+        elif current_order.status == OS_FINALIZE:
+            brickssendfurther = True  #TODO: find out when the sorted bricks have been removed
+            if not brickssendfurther:
+                current_order.allocate(self.resources, current_pos, robot_name)
+                command = {
+                    'command': 'COMMAND_WAIT'
+                }
             print 'processed mobile command for order status OS_RETURN'
 
         else:
@@ -325,9 +361,10 @@ class ResourceHandler():
         command = 0
 
         if current_order.status == OS_WAIT_FOR_CELL:
+            current_order.status = OS_READY_TO_SORT
             command = {
                 'command': 'COMMAND_SORTBRICKS',
-                'order': current_order.order
+                'order': 'hej'
             }
             print 'Processed command for OS_SORT'
         elif current_order.status == OS_LOAD:
@@ -338,6 +375,7 @@ class ResourceHandler():
             print 'processed command for OS_WAIT_FOR_MOBILE'
         elif current_order.status == OS_LOADING_NAUW:
             current_order.status = OS_RETURN
+            current_order.deallocate_cell(self.resources)
             command = dict(command='COMMAND_WAIT')
             print 'processed command for OS_LOADING_NAUW'
         else:
@@ -350,13 +388,14 @@ class ResourceHandler():
         command = 0
 
         if current_order.status == OS_READY_TO_SORT:
-            current_order.status = OS_SORTING
+            current_order.status = OS_TIP
             command = dict(command='COMMAND_SORTBRICKS')
-            print 'Updated state from OS_READY_TO_SORT to OS_SORTING'
+            print 'Updated state from OS_READY_TO_SORT to OS_TIP'
         elif current_order.status == OS_SORTING:
             command = dict(command='COMMAND_SORTBRICKS')
             print 'Still sorting'
         else:
+            command = dict(command='COMMAND_ABORT')
             print 'I AM ERROR.'
 
         return command
@@ -376,6 +415,7 @@ class ResourceHandler():
             command = dict(command='COMMAND_LOADBRICKS')
             print 'Start loading bricks'
         else:
+            command = dict(command='COMMAND_ABORT')
             print 'I AM ERROR.'
 
         return command
@@ -390,7 +430,7 @@ class ResourceHandler():
         elif current_order.status == OS_WAIT_FOR_CELL:
             command = {
                 'command': 'COMMAND_SORTBRICKS',
-                'order': current_order.order
+                'order': 'hej'
             }
             print 'Processed command for OS_WAIT_FOR_CELL'
         else:
@@ -406,6 +446,42 @@ class ResourceHandler():
             print 'Updated state from OS_LOAD to OS_LOADING_NAUW'
         else:
             print 'I AM ERROR.'
+        return 0
+
+    def print_state(self, robot_name):
+        current_order = self.resources[robot_name].bound_to_order
+        state = '# ' + robot_name
+        if current_order != 0:
+            statetext = 'unknown'
+            if current_order.status == OS_NOT_STARTED:
+                statetext = 'OS_NOT_STARTED'
+            elif current_order.status == OS_TO_DISP:
+                statetext = 'OS_TO_DISP'
+            elif current_order.status == OS_WAIT_FOR_DISP:
+                statetext = 'OS_WAIT_FOR_DISP'
+            elif current_order.status == OS_TO_CELL:
+                statetext = 'OS_TO_CELL'
+            elif current_order.status == OS_WAIT_FOR_CELL:
+                statetext = 'OS_WAIT_FOR_CELL'
+            elif current_order.status == OS_READY_TO_SORT:
+                statetext = 'OS_READY_TO_SORT'
+            elif current_order.status == OS_TIP:
+                statetext = 'OS_TIP'
+            elif current_order.status == OS_SORTING:
+                statetext = 'OS_SORTING'
+            elif current_order.status == OS_WAIT_FOR_MOBILE:
+                statetext = 'OS_WAIT_FOR_MOBILE'
+            elif current_order.status == OS_LOAD:
+                statetext = 'OS_LOAD'
+            elif current_order.status == OS_LOADING_NAUW:
+                statetext = 'OS_LOADING_NAUW'
+            elif current_order.status == OS_RETURN:
+                statetext = 'OS_RETURN'
+            elif current_order.status == OS_FINALIZE:
+                statetext = 'OS_FINALIZE'
+
+            state += '  ' + statetext
+        return {'response': state}
 
 
 def get_mobile_robot_name(number):

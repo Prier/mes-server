@@ -38,11 +38,8 @@ def generate_order():
     order_queue.put(order)
 
 
-def fetch_order():
-    if not order_queue.empty():
-        return order_queue.get()
-    else:
-        return 0
+def print_state(robot_status):
+    return resource_handler.print_state(robot_status['robot'])
 
 
 def mobile_status(m_status):
@@ -76,9 +73,13 @@ def mobile_status(m_status):
             print robot_name, ' is available\n'
 
             new_order = resource_handler.get_order(robot_name, m_status, order_queue)
+            print new_order
+            if new_order != 0:
+                print ' ',new_order.status,' ',new_order.allocated_cell,' ',new_order.allocated_robot
             command = 0
             if new_order != 0:
                 command = resource_handler.get_command_m(robot_name, m_status)
+                print command
 
             if command == 0:
                 command = {
@@ -106,10 +107,11 @@ def cell_status(c_status):
 
     # Save state information
     cell_id = c_status['cell_id']
+    resource_handler.get_cell_robot(cell_id).alive = True
     robot_name = Resources.get_cell_robot_name(cell_id)
     order = resource_handler.get_cell_robot(cell_id).bound_to_order
     if order != 0:
-        print robot_name, ' is working on order #', order['order_id']
+        print robot_name, ' is working on order #', order.order['order_id']
         if c_status['state'] == 'STATE_FREE':
             command = resource_handler.get_command_c_free(robot_name, c_status)
 
@@ -200,6 +202,7 @@ class ServerThread(threading.Thread):
         self.server.register_multicall_functions()
         self.server.register_function(cell_status, 'cell_status')
         self.server.register_function(mobile_status, 'mobile_status')
+        self.server.register_function(print_state, 'print_state')
 
     def run(self):
         self.server.serve_forever()

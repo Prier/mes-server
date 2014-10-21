@@ -11,7 +11,7 @@ today = datetime.datetime.today()
 
 cell_status = {
     'version_id': 1,
-    'cell_id': 2,
+    'cell_id': 1,
     'state': 'STATE_FREE',
     'time': str(today),
     'status': "Human readable status message.."
@@ -28,8 +28,8 @@ mobile_status = {
 }
 
 done = False
-sortingdone = False
-loadingdone = False
+sortingdone = 0
+loadingdone = 0
 
 def emulate_cell_robot(c_response):
     global sortingdone
@@ -58,17 +58,14 @@ def emulate_cell_robot(c_response):
 
     elif cell_status['state'] == 'STATE_SORTING':
         print "Workcell state is: 'STATE_SORTING'"
-        if not sortingdone:
+        if sortingdone < 5:
             print "Sorting bricks..."
-            time.sleep(5)
-            if random.randint(0, 10) < 5:
-                sortingdone = True
-
-            if sortingdone:
-                cell_status['state'] = 'STATE_ORDERSORTED'
-            else:
-                cell_status['state'] = 'STATE_OUTOFBRICKS'
+            sortingdone += 1
         else:
+            print "Sorted bricks"
+            sortingdone = 0
+            #if random.randint(0, 10) < 5:
+
             cell_status['state'] = 'STATE_ORDERSORTED'
 
     elif cell_status['state'] == 'STATE_OUTOFBRICKS':
@@ -78,14 +75,14 @@ def emulate_cell_robot(c_response):
         print "Workcell state is: 'STATE_LOADING'"
         print "Loading bricks onto Mobile robot..."
         time.sleep(3)
-        loadingdone = True
-        if loadingdone:
+        if loadingdone < 3:
+            loadingdone += 1
+        else:
+            loadingdone = 0
             cell_status['state'] = 'STATE_FREE'
 
     if cell_status['state'] == 'STATE_ORDERSORTED':
         print "Workcell state is: 'STATE_ORDERSORTED'"
-        print "Order is sorted..."
-        cell_status['state'] = 'STATE_LOADING'
 
 
 def emulate_mobile_robot(m_response):
@@ -117,11 +114,11 @@ def emulate_mobile_robot(m_response):
         if m_response['command'] == 'COMMAND_TIP':
             # Tip of those bricks!
             print 'Tipping off bricks...'
-            time.sleep(3)
+            time.sleep(1)
             print 'The bricks are tipped off!'
         else:
             # Drive to next position
-            time.sleep(2)
+            time.sleep(1)
             print 'Position: ', m_response['path'], ' is reached!'
             mobile_status['position'] = m_response['path']
             done = True
@@ -138,15 +135,21 @@ def emulate_workcell():
 
 def main():
     while True:
+        print
         print "Mobile state is: " + mobile_status['state']
         # Robot sends its status to MES-server every 2 seconds
+        print server.print_state({'robot': 'Mobile3'})['response']
         mobile_response = (server.mobile_status(mobile_status))
         emulate_mobile_robot(mobile_response)
+        print server.print_state({'robot': 'Mobile3'})['response']
         # Workcell sends its status to MES-server every 2 seconds
+        print
         print "Workcell state is: " + cell_status['state']
+        print server.print_state({'robot': 'Cell1'})['response']
         workcell_response = (server.cell_status(cell_status))
         emulate_cell_robot(workcell_response)
-        time.sleep(2)  # Delay for 2 seconds
+        print server.print_state({'robot': 'Cell1'})['response']
+        time.sleep(1)  # Delay for 2 seconds
 
 if __name__ == "__main__":
     main()
