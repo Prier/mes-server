@@ -122,13 +122,18 @@ def cell_status(c_status):
 
         elif c_status['state'] == 'STATE_ORDERSORTED':
             print robot_name, ' is done sorting\n'
-            resource_handler.update_state('order_sorted')
+            resource_handler.done_sorting(robot_name)
             return dict(command='COMMAND_WAIT')
 
+        elif c_status['state'] == 'STATE_OUTOFBRICKS':
+            print robot_name, ' is out of bricks\n'
+            resource_handler.out_of_bricks(robot_name)
+            return dict(command='COMMAND_wait')
+
         elif c_status['state'] == 'STATE_LOADING':
-            print robot_name, ' loaded bricks\n'
-            resource_handler.update_state('order_loaded')
-            return dict(command='COMMAND_WAIT')
+            print robot_name, ' is loading bricks\n'
+            #TODO: do shit
+            return dict(command='COMMAND_LOADBRICKS')
 
         elif c_status['state'] == 'STATE_ERROR':
             print robot_name, ' has encountered an error! ABORTING...\n'
