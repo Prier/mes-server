@@ -76,6 +76,8 @@ def emulate_cell_robot(c_response):
 
 
 def main():
+    t_id = raw_input('Please choose an ID number for the client (1-3): ')
+    cell_status['robot_id'] = int(t_id)
     while True:
         # Workcell sends its status to MES-server every 2 seconds
         print
