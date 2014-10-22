@@ -52,6 +52,7 @@ def emulate_mobile_robot(m_response):
             print 'Tipping off bricks...'
             time.sleep(1)
             print 'The bricks are tipped off!'
+            done = True
         else:
             # Drive to next position
             time.sleep(1)
