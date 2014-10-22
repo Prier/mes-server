@@ -9,6 +9,7 @@ The MES-server consists of Server.py and Resources.py. Running Server.py will st
 
 #### Areas:
 * Dispenser
+* InBox
 * Station1
 * Station2
 * Station3
@@ -23,6 +24,8 @@ The MES-server consists of Server.py and Resources.py. Running Server.py will st
 * LoadOn2
 * LoadOff3
 * LoadOn3
+
+![test](http://i.imgur.com/x0nrDWh.png?1 "Floor plan")
 
 ## Info for clients
 
