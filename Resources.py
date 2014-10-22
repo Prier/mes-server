@@ -60,35 +60,26 @@ class Order():
         resources[self.allocated_cell].bound_to_order = 0
         self.allocated_cell = 0
 
-#    def end(self, resources):
-#        self.order = 0
-#        self.status = 0
-#        for area in self.allocated_areas:
-#            resources[area].taken = False
-#            resources[area].bound_to_order = 0
-#        self.allocated_areas = []
-#        resources[self.allocated_robot].bound_to_order = 0
-#        resources[self.allocated_robot].taken = False
-#        self.allocated_robot = 0
-#        resources[self.allocated_cell].taken = False
-#        resources[self.allocated_cell].bound_to_order = 0
-#        self.allocated_cell = 0
-
 
 class ResourceHandler():
     def __init__(self):
         self.active_orders = []
         self.resources = {
-            'Dispenser': MesResource(1, 'Ramp'),
-            'Ramp': MesResource('Dispenser', 'Floor'),
-            'Line': MesResource('Floor', 2),
-            'Floor': MesResource('Ramp', 'Line'),
-            'Station1': MesResource('Dispenser', 'Ramp'),
-            'Station2': MesResource('Dispenser', 'Ramp'),
-            'Station3': MesResource('Dispenser', 'Ramp'),
-            'LoadOff1': MesResource('Line', 1),
-            'LoadOff2': MesResource('Line', 1),
-            'LoadOff3': MesResource('Line', 1),
+            'Dispenser': MesResource(1, 'RampOut'),
+            'RampOut': MesResource('FloorOut', 'FloorOut'),
+            'RampIn': MesResource('Dispenser', 'Dispenser'),
+            'Line': MesResource('FloorIn', 1),
+            'FloorOut': MesResource('FloorIn', 'Line'),
+            'FloorIn': MesResource('RampIn', 'FloorOut'),
+            'Station1': MesResource('Dispenser', 'RampOut'),
+            'Station2': MesResource('Dispenser', 'RampOut'),
+            'Station3': MesResource('Dispenser', 'RampOut'),
+            'LoadOff1': MesResource('Line', 2),
+            'LoadOff2': MesResource('Line', 2),
+            'LoadOff3': MesResource('Line', 2),
+            'LoadOn1': MesResource('Line', 3),
+            'LoadOn2': MesResource('Line', 3),
+            'LoadOn3': MesResource('Line', 3),
             'Mobile1': MesResource(0, 0),
             'Mobile2': MesResource(0, 0),
             'Mobile3': MesResource(0, 0),
@@ -200,13 +191,13 @@ class ResourceHandler():
         elif current_order.status == OS_TO_CELL:
             current_order.allocate(self.resources, current_pos, robot_name)
             next_pos = self.resources[current_pos].to_cell
-            if next_pos == 1:  # at a cell
+            if next_pos == 2:  # at a cell
                 current_order.status = OS_WAIT_FOR_CELL
                 command = {
                     'command': 'COMMAND_WAIT'
                 }
 
-            elif next_pos == 2:  # next to the three cells
+            elif next_pos == 1:  # next to the three cells
                 next_pos = 0
                 if current_order.allocated_cell == 'Cell1':
                     next_pos = 'LoadOff1'
@@ -228,6 +219,8 @@ class ResourceHandler():
                     #this really shouldn't happen!
                     next_pos = next_pos
             else:
+                if next_pos == 3:
+                    next_pos = 'Line'
                 if not self.resources[next_pos].taken:
                     current_order.allocate(self.resources, next_pos, robot_name)
                     command = {
@@ -266,20 +259,20 @@ class ResourceHandler():
         elif current_order.status == OS_WAIT_FOR_MOBILE:
             current_order.allocate(self.resources, current_pos, robot_name)
             next_pos = self.resources[current_pos].to_cell
-            if next_pos == 1:  # at a cell
+            if next_pos == 3:  # at a cell
                 current_order.status = OS_LOAD
                 command = {
                     'command': 'COMMAND_WAIT'
                 }
 
-            elif next_pos == 2:  # next to the three cells
+            elif next_pos == 1:  # next to the three cells
                 next_pos = 0
                 if current_order.allocated_cell == 'Cell1':
-                    next_pos = 'LoadOff1'
+                    next_pos = 'LoadOn1'
                 elif current_order.allocated_cell == 'Cell2':
-                    next_pos = 'LoadOff2'
+                    next_pos = 'LoadOn2'
                 elif current_order.allocated_cell == 'Cell3':
-                    next_pos = 'LoadOff3'
+                    next_pos = 'LoadOn3'
 
                 if next_pos != 0:
                     if not self.resources[next_pos].taken:
@@ -294,6 +287,8 @@ class ResourceHandler():
                     #this really shouldn't happen!
                     next_pos = next_pos
             else:
+                if next_pos == 2:
+                    next_pos = 'Line'
                 if not self.resources[next_pos].taken:
                     current_order.allocate(self.resources, next_pos, robot_name)
                     command = {
