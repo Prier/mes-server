@@ -37,8 +37,11 @@ So: The client connects to the server, and then periodically sends a status mess
 
 ### The Mobile Client
 
-![ddgh](http://i.imgur.com/XdXQzcP.png "Text")
+The state machine of the mobile robot (from the viewpoint of the server) should be as seen in the image below:
 
+![ddgh](http://i.imgur.com/XdXQzcP.png "State machine for mobile robot")
+
+This means that the robot should start in STATE\_FREE, and periodically tell the server its state. At some point there will be something for the robot to do, and it will return a command other than COMMAND\_WAIT. The robot should start doing that (e.g. move to a new area), and when its state changes (e.g. it arrives at the area and is free again, or it finishes tipping bricks off), it should again update the server with its state. If the robot is told to wait, it should periodically tell the server its state again, so the server can give it a new job when something comes up.
 
 The status message for the mobile robots is as follows:
 
@@ -63,7 +66,7 @@ string position   # The position of the mobile platform
 string status     # Feel free to use this to write a human readable status of the robot. This may show up on the MES dashboard.
 ```
 
-The command:
+The command format for the mobile robot is:
 
 ```
 Header header
@@ -79,4 +82,60 @@ string path     # If the command is COMMAND_NAVIGATE, this will be the next dest
 
 ### The Cell Client
 
-![ddgh](http://i.imgur.com/Anqak4s.png "Text")
+The state machine of the workcell robot (from the viewpoint of the server) should be as seen in the image below:
+
+![ddgh](http://i.imgur.com/Anqak4s.png "State machine for workcell robot")
+
+[Explanation of workcell robot behaviour].
+
+The status message for the cell robots is as follows:
+
+```
+Header header
+
+uint8 version_id  # Version of the client
+
+uint8 robot_id    # Robot id
+
+uint8 STATE_FREE=0
+uint8 STATE_SORTING=1
+uint8 STATE_OUTOFBRICKS=2
+uint8 STATE_ORDERSORTED=3
+uint8 STATE_LOADING=4
+uint8 state       # When the platform is done loading, the state should be considered free.
+
+uint8 done_pct    # For future use. Return 0 when not working
+
+string status     # Feel free to use this to write a human readable status of the robot. This may show up on the MES dashboard.
+```
+
+The command format for the cell robot is:
+
+```
+Header header
+
+uint8 COMMAND_WAIT = 0
+uint8 COMMAND_SORTBRICKS = 1
+uint8 COMMAND_LOADBRICKS = 2
+uint8 COMMAND_ABORT = 3
+uint8 command    # The command that should be started by the robot
+
+mes_order order  # This is further defined below
+```
+
+The mes_order message is:
+
+```
+uint16 order_id
+lego_brick[] bricks
+```
+
+And a lego_brick is:
+
+```
+uint8 COLOR_RED = 0
+uint8 COLOR_BLUE = 1
+uint8 COLOR_YELLOW = 2
+uint8 color
+uint8 count
+```
