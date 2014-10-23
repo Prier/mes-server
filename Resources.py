@@ -360,7 +360,7 @@ class ResourceHandler():
             current_order.status = OS_READY_TO_SORT
             command = {
                 'command': 'COMMAND_SORTBRICKS',
-                'order': 'hej'
+                'order': current_order.order
             }
             print 'Processed command for OS_SORT'
         elif current_order.status == OS_LOAD:
@@ -426,7 +426,7 @@ class ResourceHandler():
         elif current_order.status == OS_WAIT_FOR_CELL:
             command = {
                 'command': 'COMMAND_SORTBRICKS',
-                'order': 'hej'
+                'order': current_order.order
             }
             print 'Processed command for OS_WAIT_FOR_CELL'
         else:

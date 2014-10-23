@@ -31,9 +31,10 @@ def generate_order():
     order_id += 1
     order = {
         'order_id': order_id,
-        'bricks':
-            dict(color_red=random.randint(0, 8), color_blue=random.randint(0, 8), color_yellow=random.randint(0, 8)),
-        'time': str(datetime.datetime.today())
+        'bricks': {
+            dict(color='COLOR_RED', size=6, count=random.randint(0, 8)),
+            dict(color='COLOR_BLUE', size=6, count=random.randint(0, 8)),
+            dict(color='COLOR_YELLOW', size=6, count=random.randint(0, 8))}
     }
     order_queue.put(order)
 
@@ -106,7 +107,7 @@ def cell_status(c_status):
         print k, ' = ', v
 
     # Save state information
-    cell_id = c_status['cell_id']
+    cell_id = c_status['robot_id']
     resource_handler.get_cell_robot(cell_id).alive = True
     robot_name = Resources.get_cell_robot_name(cell_id)
     order = resource_handler.get_cell_robot(cell_id).bound_to_order
