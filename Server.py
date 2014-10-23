@@ -31,10 +31,10 @@ def generate_order():
     order_id += 1
     order = {
         'order_id': order_id,
-        'bricks': {
+        'bricks': [
             dict(color='COLOR_RED', size=6, count=random.randint(0, 8)),
             dict(color='COLOR_BLUE', size=6, count=random.randint(0, 8)),
-            dict(color='COLOR_YELLOW', size=6, count=random.randint(0, 8))}
+            dict(color='COLOR_YELLOW', size=6, count=random.randint(0, 8))]
     }
     order_queue.put(order)
 
