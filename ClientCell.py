@@ -82,10 +82,11 @@ def main():
         # Workcell sends its status to MES-server every 2 seconds
         print
         print "Workcell state is: " + cell_status['state']
-        print server.print_state({'robot': 'Cell1'})['response']
+        #print server.print_state({'robot': 'Cell1'})['response']
         workcell_response = (server.cell_status(cell_status))
         emulate_cell_robot(workcell_response)
-        print server.print_state({'robot': 'Cell1'})['response']
+        print "Workcell state is: " + cell_status['state']
+        #print server.print_state({'robot': 'Cell1'})['response']
         time.sleep(1)  # Delay for 2 seconds
 
 if __name__ == "__main__":
