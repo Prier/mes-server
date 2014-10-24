@@ -73,10 +73,11 @@ def main():
         print
         print "Mobile state is: " + mobile_status['state']
         # Robot sends its status to MES-server every 2 seconds
-        print server.print_state({'robot': 'Mobile3'})['response']
+        #print server.print_state({'robot': 'Mobile3'})['response']
         mobile_response = (server.mobile_status(mobile_status))
         emulate_mobile_robot(mobile_response)
-        print server.print_state({'robot': 'Mobile3'})['response']
+        print "Mobile state is: " + mobile_status['state']
+        #print server.print_state({'robot': 'Mobile3'})['response']
         time.sleep(1)  # Delay for 2 seconds
 
 if __name__ == "__main__":
