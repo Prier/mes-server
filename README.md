@@ -5,7 +5,7 @@ The awesome MES-server.
 
 ## Overview
 
-The MES-server consists of Server.py and Resources.py. Running Server.py will start the server, which will listen for incoming connections from clients. The files ClientCell.py and ClientMobile.py are examples of how a client can connect to the server with XML-RPC.
+The MES-server consists of Server.py and Resources.py. Running Server.py will start the server, which will listen for incoming connections from clients. The files ClientCell.py and ClientMobile.py are examples of how a client can connect to the server with XML-RPC, and can mainly be used as simulated workcells/mobile robots.
 
 #### Areas:
 * Dispenser
@@ -29,9 +29,9 @@ The MES-server consists of Server.py and Resources.py. Running Server.py will st
 
 ## Info for clients
 
-The first thing a client needs to know is the ip-address of the server. This is defined at the beginning of the client files. For testing you can have the server and client running on the same computer, in which case the ip will already fit; otherwise always remember to change it.
+The first thing a client needs to know is the ip-address of the server. This is defined at the beginning of the client files. For testing you can have the server and client running on the same computer.
 
-Secondly, they need to understand commands properly and know when and which status messages to send. The current client files pretend to do the work the server asks of them, and are examples of how the communication works.
+Secondly, they need to understand commands properly and know when and which status messages to send. The current client files pretend to do the work the server asks of them. The ROS node clients from the rsd\_mes\_client repository should be used for the actual project.
 
 So: The client connects to the server, and then periodically sends a status message via a XML-RPC call. This means they will get a response back with a command, which will tell them what to do. How this works in detail for each platform is detailed below.
 
@@ -42,6 +42,8 @@ The state machine of the mobile robot (from the viewpoint of the server) should 
 ![ddgh](http://i.imgur.com/XdXQzcP.png "State machine for mobile robot")
 
 This means that the robot should start in STATE\_FREE, and periodically tell the server its state. At some point there will be something for the robot to do, and it will return a command other than COMMAND\_WAIT. The robot should start doing that (e.g. move to a new area), and when its state changes (e.g. it arrives at the area and is free again, or it finishes tipping bricks off), it should again update the server with its state. If the robot is told to wait, it should periodically tell the server its state again, so the server can give it a new job when something comes up.
+
+Below are quick references for the ROS messages needed.
 
 The status message for the mobile robots is as follows:
 
@@ -87,6 +89,8 @@ The state machine of the workcell robot (from the viewpoint of the server) shoul
 ![ddgh](http://i.imgur.com/Anqak4s.png "State machine for workcell robot")
 
 [Explanation of workcell robot behaviour].
+
+Below are quick references for the ROS messages needed.
 
 The status message for the cell robots is as follows:
 
