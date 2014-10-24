@@ -76,7 +76,7 @@ def mobile_status(m_status):
             new_order = resource_handler.get_order(robot_name, m_status, order_queue)
             print new_order
             if new_order != 0:
-                print ' ',new_order.status,' ',new_order.allocated_cell,' ',new_order.allocated_robot
+                print ' ', new_order.status, ' ', new_order.allocated_cell, ' ', new_order.allocated_robot
             command = 0
             if new_order != 0:
                 command = resource_handler.get_command_m(robot_name, m_status)

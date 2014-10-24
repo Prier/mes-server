@@ -239,11 +239,19 @@ class ResourceHandler():
             print 'processed mobile command for order status OS_WAIT_FOR_CELL'
 
         elif current_order.status == OS_SORTING:
-            current_order.allocate(self.resources, current_pos, robot_name)
-            current_order.status = OS_TIP
+            if m_status['state'] == 'STATE_WORKING':
+                current_order.allocate(self.resources, current_pos, robot_name)
+                command = {
+                    'command': 'COMMAND_TIP'
+                }
+            else:
+                command = {
+                    'command': 'COMMAND_WAIT'
+                }
             print 'processed mobile command for order status OS_WAIT_FOR_CELL'
 
         elif current_order.status == OS_TIP:
+            current_order.allocate(self.resources, current_pos, robot_name)
             command = {
                 'command': 'COMMAND_TIP'
             }
