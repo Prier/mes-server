@@ -87,6 +87,8 @@ def main():
         emulate_cell_robot(workcell_response)
         print "Workcell state is: " + cell_status['state']
         #print server.print_state({'robot': 'Cell1'})['response']
+        resp = server.get_active_orders()
+        print(resp)
         time.sleep(1)  # Delay for 2 seconds
 
 if __name__ == "__main__":

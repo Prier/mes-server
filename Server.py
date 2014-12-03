@@ -19,7 +19,7 @@ resource_handler = Resources.ResourceHandler()
 # MES variables
 
 order_id = 0
-order_queue = Queue.Queue()
+order_queue = deque([])
 free_robot_list = deque([])
 free_cell_list = deque([])
 
@@ -36,7 +36,7 @@ def generate_order():
             dict(color='COLOR_BLUE', size=6, count=random.randint(0, 8)),
             dict(color='COLOR_YELLOW', size=6, count=random.randint(0, 8))]
     }
-    order_queue.put(order)
+    order_queue.append(order)
 
 
 def print_state(robot_status):
@@ -196,6 +196,32 @@ def cell_status(c_status):
             return dict(command='COMMAND_ABORT')
 
 
+def get_inactive_orders():
+    value = []
+    for thing in order_queue:
+        value.append(thing)
+    return value
+
+
+def get_active_orders():
+    cell1order = resource_handler.resources['Cell1'].bound_to_order
+    cell2order = resource_handler.resources['Cell2'].bound_to_order
+    cell3order = resource_handler.resources['Cell3'].bound_to_order
+
+    value = []
+
+    if cell1order != 0:
+        value.append(cell1order.order)
+    if cell2order != 0:
+        value.append(cell2order.order)
+    if cell3order != 0:
+        value.append(cell3order.order)
+    return value
+
+def add_order(order):
+    print(order)
+
+
 class ServerThread(threading.Thread):
     def __init__(self, server_addr):
         threading.Thread.__init__(self)
@@ -204,6 +230,9 @@ class ServerThread(threading.Thread):
         self.server.register_function(cell_status, 'cell_status')
         self.server.register_function(mobile_status, 'mobile_status')
         self.server.register_function(print_state, 'print_state')
+        self.server.register_function(get_inactive_orders, 'get_inactive_orders')
+        self.server.register_function(get_active_orders, 'get_active_orders')
+        self.server.register_function(add_order, 'add_order')
 
     def run(self):
         self.server.serve_forever()
