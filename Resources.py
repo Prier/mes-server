@@ -125,8 +125,8 @@ class ResourceHandler():
                 if self.resources['Cell3'].bound_to_order == 0 and self.resources['Cell3'].alive:
                     free_cell = 'Cell3'
             if free_cell != 0:
-                if not order_queue.empty():
-                    order = order_queue.get()
+                if len(order_queue) > 0:
+                    order = order_queue.popleft()
                     order = Order(self.resources, current_pos, order, robot_name, free_cell)
 
         return order
