@@ -4,7 +4,7 @@ import argparse
 import time
 import xmlrpclib
 import threading
-#from twisted.internet import reactor
+import random
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 
 server = xmlrpclib.ServerProxy('http://192.168.1.50:8000', use_datetime=True)
@@ -22,11 +22,27 @@ def close_dispenser():
     return 0
 
 
+class DispenserThread(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.id = random.randint(0, 1000)
+
+    def run(self):
+        print("Dispenser thread #" + self.id + ": Opening dispenser")
+        open_dispenser()
+        time.sleep(seconds_to_remain_open)
+        print("Dispenser thread #" + self.id + ": Closing dispenser")
+        close_dispenser()
+        print("Dispenser thread #" + self.id + ": Informing server about finished dispensing")
+        server.finished_dispensing()
+        print("Dispenser thread #" + self.id + ": Ending dispenser thread")
+
+
 def dispense():
-    open_dispenser()
-    time.sleep(seconds_to_remain_open)
-    close_dispenser()
-    server.finished_dispensing()
+    print("Starting dispenser")
+    dispenser_thread = DispenserThread()
+    dispenser_thread.start()
+    print("Returning from rpc")
 
 
 class ServerThread(threading.Thread):
@@ -43,9 +59,9 @@ class ServerThread(threading.Thread):
 def main():
     connected = False
 
-    parser = argparse.ArgumentParser(description='Multithreaded MES XMLRPC Server')
+    parser = argparse.ArgumentParser(description='Multithreaded MES XMLRPC Dispenser Software')
     parser.add_argument('--host', action="store", dest="host", default='localhost')
-    parser.add_argument('--port', action="store", dest="port", default=8000, type=int)
+    parser.add_argument('--port', action="store", dest="port", default=8001, type=int)
 
     # parse arguments
     given_args = parser.parse_args()
@@ -53,16 +69,11 @@ def main():
     local_server = ServerThread((host, port))
     local_server.start()
 
-    # l.stop() will stop the looping calls
-    #print("trala1")
-    #reactor.run()
-    #print("trala2")
-
     while True:
         if not connected:
             print("Trying connection ... ")
             try:
-                server.register_dispenser('')
+                server.register_dispenser(0)
                 connected = True
                 print("Connected to server.")
             except:

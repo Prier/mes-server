@@ -4,10 +4,8 @@ __author__ = 'armienn & reaver'
 import argparse
 import threading
 import random
-import datetime
 from twisted.internet import task
 from twisted.internet import reactor
-import Queue
 from collections import deque
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 import xmlrpclib
@@ -24,7 +22,7 @@ order_queue = deque([])
 free_robot_list = deque([])
 free_cell_list = deque([])
 
-dispenser = {'ip': 'http://192.168.1.2:8000',
+dispenser = {'ip': 'http://127.0.0.1:8001',
              'connected': False,
              'connection': None}
 
@@ -233,10 +231,12 @@ def register_dispenser(ip):
     #dispenser['ip'] = ip
     dispenser['connection'] = xmlrpclib.ServerProxy(dispenser['ip'], use_datetime=True)
     dispenser['connected'] = True
+    print("Dispenser registered")
 
 
 def finished_dispensing():
     resource_handler.dispenser_has_dispensed = True
+    print("Dispenser has dispensed")
 
 
 class ServerThread(threading.Thread):
@@ -277,7 +277,7 @@ def main():
 
     # generate order
     l = task.LoopingCall(generate_order)
-    l.start(2.0)  # call every second
+    l.start(10.0)  # call every ten seconds
 
     # l.stop() will stop the looping calls
     reactor.run()
