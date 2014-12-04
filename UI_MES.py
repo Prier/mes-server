@@ -6,7 +6,7 @@ import datetime
 import time
 from PyQt4 import QtCore, QtGui, uic
 
-server = xmlrpclib.ServerProxy('http://10.112.254.161:8000', use_datetime=True)
+server = xmlrpclib.ServerProxy('http://127.0.0.1:8000', use_datetime=True)
 today = datetime.datetime.today()
 timeofday = time.clock()
 
@@ -24,10 +24,13 @@ class orderWindowClass(QtGui.QMainWindow, setorder_class):
         self.cncl_btn.clicked.connect(self.cncl_btn_clicked)
 
     def ok_btn_clicked(self):
+        red = self.redSpinBox.value()
+        blue = self.blueSpinBox.value()
+        yellow = self.yellowSpinBox.value()
         order = [
-            dict(color='COLOR_RED', size=6, count=self.redSpinBox.value),
-            dict(color='COLOR_BLUE', size=6, count=self.blueSpinBox.value),
-            dict(color='COLOR_YELLOW', size=6, count=self.yellowSpinBox.value)]
+            {'color': 'COLOR_RED', 'size': 6, 'count': red},
+            {'color': 'COLOR_BLUE', 'size': 6, 'count': blue},
+            {'color': 'COLOR_YELLOW', 'size': 6, 'count': yellow}]
         server.add_order(order)
         orderWin.close()
 
