@@ -88,6 +88,7 @@ class ResourceHandler():
             'Cell2': MesResource(0, 0),
             'Cell3': MesResource(0, 0)
         }
+        self.dispenser_has_dispensed = False
         print 'Initialised resources'
 
     def get_mobile_robot(self, number):
@@ -131,7 +132,7 @@ class ResourceHandler():
 
         return order
 
-    def get_command_m(self, robot_name, m_status):
+    def get_command_m(self, robot_name, m_status, dispenser):
         current_order = self.resources[robot_name].bound_to_order
         current_pos = m_status['position']
         current_order.deallocate(self.resources)
@@ -177,8 +178,9 @@ class ResourceHandler():
 
         elif current_order.status == OS_WAIT_FOR_DISP:
             current_order.allocate(self.resources, current_pos, robot_name)
-            dispenser_has_dispensed = True  # TODO: check if bricks have been dispensed
-            if dispenser_has_dispensed:
+            #dispenser_has_dispensed = True  # TODO: check if bricks have been dispensed
+            if (not dispenser['connected']) or self.dispenser_has_dispensed:
+                self.dispenser_has_dispensed = False
                 current_order.status = OS_TO_CELL
                 next_pos = self.resources[current_pos].to_cell
                 if not self.resources[next_pos].taken:
@@ -187,6 +189,15 @@ class ResourceHandler():
                         'command': 'COMMAND_NAVIGATE',
                         'path': next_pos
                     }
+            else:
+                try:
+                    dispenser['connection'].dispense()
+                except:
+                    print("Error in communication with dispenser. Please reconnect.")
+                    dispenser['connected'] = False
+                command = {
+                    'command': 'COMMAND_WAIT'
+                }
             print 'processed mobile command for order status OS_WAIT_FOR_DISP'
 
         elif current_order.status == OS_TO_CELL:
