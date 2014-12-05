@@ -148,7 +148,8 @@ uint8 count
 
 There are some marks with coordinates on the floor in robolab, which should fit together with the coordinates returned by the camera locator. Going by these coordinates, we have defined the various areas as rectangles. Below is a list of the areas along with the lower left and upper right corner:
 
-```FloorOut,  -2.00,-2.15,   -0.15, 1.00,
+```
+FloorOut,  -2.00,-2.15,   -0.15, 1.00,
 FloorIn,   -0.15,-2.15,    2.50, 1.00,
 RampOut,   -1.00,-4.70,   -0.15,-2.15,
 RampIn,    -0.15,-4.10,    0.40,-2.15,
