@@ -146,7 +146,7 @@ uint8 count
 
 ### Extra area info
 
-There are some marks with coordinates on the floor in robolab, which should fit together with the coordinates returned by the camera locator. Going by these coordinates, we have defined the various areas as rectangles. Below is a list of the areas along with the lower left and upper right corner:
+There are some marks with coordinates on the floor in robolab, which should fit together with the coordinates returned by the camera locator. Going by these coordinates, we have defined the various areas as rectangles. Below is a list of the areas along with the lower left and upper right corner (the loadoff1 and loadon1 are very approximate):
 
 ```
 FloorOut,  -2.00,-2.15,   -0.15, 1.00,
