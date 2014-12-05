@@ -6,7 +6,7 @@ import datetime
 import time
 import random
 
-server = xmlrpclib.ServerProxy('http://192.168.1.50:8000', use_datetime=True)
+server = xmlrpclib.ServerProxy('http://127.0.0.1:8000', use_datetime=True) #('http://192.168.1.50:8000', use_datetime=True)
 today = datetime.datetime.today()
 
 cell_status = {

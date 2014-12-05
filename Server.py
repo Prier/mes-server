@@ -195,6 +195,24 @@ def cell_status(c_status):
             print robot_name, ': Error in states! ABORTING...\n'
             return dict(command='COMMAND_ABORT')
 
+def get_status():
+    cell1order = resource_handler.resources['Cell1'].bound_to_order
+    cell2order = resource_handler.resources['Cell2'].bound_to_order
+    cell3order = resource_handler.resources['Cell3'].bound_to_order
+
+    mobile1order = resource_handler.resources['Mobile1'].bound_to_order
+    mobile2order = resource_handler.resources['Mobile2'].bound_to_order
+    mobile3order = resource_handler.resources['Mobile3'].bound_to_order
+
+    value = []
+
+    value.append(cell1order)
+    value.append(cell2order)
+    value.append(cell3order)
+    value.append(mobile1order)
+    value.append(mobile2order)
+    value.append(mobile3order)
+    return value
 
 def get_inactive_orders():
     value = []
@@ -233,6 +251,7 @@ class ServerThread(threading.Thread):
         self.server.register_function(get_inactive_orders, 'get_inactive_orders')
         self.server.register_function(get_active_orders, 'get_active_orders')
         self.server.register_function(add_order, 'add_order')
+        self.server.register_function(get_status, 'get_status')
 
     def run(self):
         self.server.serve_forever()

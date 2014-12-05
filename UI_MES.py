@@ -4,6 +4,7 @@ import sys
 import xmlrpclib
 import datetime
 import time
+import threading
 from PyQt4 import QtCore, QtGui, uic
 
 server = xmlrpclib.ServerProxy('http://127.0.0.1:8000', use_datetime=True)
@@ -14,6 +15,45 @@ form_class = uic.loadUiType("mes_interface.ui")[0]
 dialog_class = uic.loadUiType("conn_error_msg.ui")[0]
 setorder_class = uic.loadUiType("set_order.ui")[0]
 app = QtGui.QApplication(sys.argv)
+
+
+class UpdateThread(threading.Thread):
+    def __init__(self, window):
+        threading.Thread.__init__(self)
+        self._window = window
+
+    def run(self):
+        while True:
+            try:
+                status = server.get_status()
+
+                if status[0] != 0:
+                    self._window.cell1_label.setStyleSheet('background-color: green;')
+                else:
+                    self._window.cell1_label.setStyleSheet('background-color: red;')
+                if status[1] != 0:
+                    self._window.cell2_label.setStyleSheet('background-color: green;')
+                else:
+                    self._window.cell2_label.setStyleSheet('background-color: red;')
+                if status[2] != 0:
+                    self._window.cell3_label.setStyleSheet('background-color: green;')
+                else:
+                    self._window.cell3_label.setStyleSheet('background-color: red;')
+                if status[3] != 0:
+                    self._window.mobile1_label.setStyleSheet('background-color: green;')
+                else:
+                    self._window.mobile1_label.setStyleSheet('background-color: red;')
+                if status[4] != 0:
+                    self._window.mobile2_label.setStyleSheet('background-color: green;')
+                else:
+                    self._window.mobile2_label.setStyleSheet('background-color: red;')
+                if status[5] != 0:
+                    self._window.mobile3_label.setStyleSheet('background-color: green;')
+                else:
+                    self._window.mobile3_label.setStyleSheet('background-color: red;')
+                time.sleep(2)
+            except:
+                errorWin.show()
 
 
 class orderWindowClass(QtGui.QMainWindow, setorder_class):
@@ -58,6 +98,17 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
         self.generate_order.clicked.connect(self.generate_order_clicked)  # to the buttons
         self.start_btn.clicked.connect(self.start_btn_clicked)
 
+        self.cell1_label.setStyleSheet('background-color: red;')
+        self.cell2_label.setStyleSheet('background-color: red;')
+        self.cell3_label.setStyleSheet('background-color: red;')
+        self.mobile1_label.setStyleSheet('background-color: red;')
+        self.mobile2_label.setStyleSheet('background-color: red;')
+        self.mobile3_label.setStyleSheet('background-color: red;')
+        self.dispencer_label.setStyleSheet('background-color: red;')
+
+        update_thread = UpdateThread(self)
+        update_thread.start()
+
     def exit_button_clicked(self):
         mainWin.close()
 
@@ -66,8 +117,10 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
         # generate order
 
     def start_btn_clicked(self):
-        server = xmlrpclib.ServerProxy('http://10.112.254.161:8000', use_datetime=True)
+        #try:
+        #server = xmlrpclib.ServerProxy('http://192.168.1.50:8000', use_datetime=True)
         #errorWin.show()
+        return
 mainWin = MyWindowClass(None)
 
 

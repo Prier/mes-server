@@ -2,6 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="08c7b7ef-028a-481c-9b36-c8133e3197c5" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mes_interface.ui" afterPath="$PROJECT_DIR$/mes_interface.ui" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ClientCell.py" afterPath="$PROJECT_DIR$/ClientCell.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ClientMobile.py" afterPath="$PROJECT_DIR$/ClientMobile.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Server.py" afterPath="$PROJECT_DIR$/Server.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UI_MES.py" afterPath="$PROJECT_DIR$/UI_MES.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -25,14 +29,14 @@
     <favorites_list name="mes-server" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="vertical" split-proportion="0.78153443">
+    <splitter split-orientation="vertical" split-proportion="0.55786735">
       <split-first>
         <leaf>
           <file leaf-file-name="ClientCell.py" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/ClientCell.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="1230" max-vertical-offset="1800">
-                  <caret line="85" column="32" selection-start-line="85" selection-start-column="32" selection-end-line="85" selection-end-column="32" />
+                <state vertical-scroll-proportion="0.0" vertical-offset="198" max-vertical-offset="1854">
+                  <caret line="11" column="15" selection-start-line="11" selection-start-column="15" selection-end-line="11" selection-end-column="15" />
                   <folding />
                 </state>
               </provider>
@@ -41,8 +45,8 @@
           <file leaf-file-name="ClientMobile.py" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/ClientMobile.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1602">
-                  <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="77" />
+                <state vertical-scroll-proportion="0.0" vertical-offset="144" max-vertical-offset="1656">
+                  <caret line="8" column="74" selection-start-line="8" selection-start-column="74" selection-end-line="8" selection-end-column="74" />
                   <folding />
                 </state>
               </provider>
@@ -51,7 +55,7 @@
           <file leaf-file-name="Resources.py" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Resources.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="2349" max-vertical-offset="9018">
+                <state vertical-scroll-proportion="0.0" vertical-offset="1134" max-vertical-offset="9018">
                   <caret line="159" column="0" selection-start-line="159" selection-start-column="0" selection-end-line="159" selection-end-column="0" />
                   <folding />
                 </state>
@@ -61,22 +65,19 @@
           <file leaf-file-name="Server.py" pinned="false" current="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Server.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="3456" max-vertical-offset="4770">
-                  <caret line="33" column="19" selection-start-line="33" selection-start-column="19" selection-end-line="33" selection-end-column="19" />
+                <state vertical-scroll-proportion="0.0" vertical-offset="3522" max-vertical-offset="5274">
+                  <caret line="213" column="30" selection-start-line="213" selection-start-column="30" selection-end-line="213" selection-end-column="30" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="UI_MES.py" pinned="false" current="true" current-in-tab="true">
+          <file leaf-file-name="UI_MES.py" pinned="false" current="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/UI_MES.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.6315789" vertical-offset="180" max-vertical-offset="1512">
-                  <caret line="34" column="24" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
-                  <folding>
-                    <marker date="1417625646468" expanded="true" signature="1656:2127" placeholder="..." />
-                    <marker date="1417625646468" expanded="true" signature="1656:1916" placeholder="..." />
-                  </folding>
+                <state vertical-scroll-proportion="1.6034986" vertical-offset="314" max-vertical-offset="2448">
+                  <caret line="53" column="28" selection-start-line="53" selection-start-column="28" selection-end-line="53" selection-end-column="28" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -85,16 +86,12 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="UI_MES.py" pinned="false" current="false" current-in-tab="true">
+          <file leaf-file-name="UI_MES.py" pinned="false" current="true" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/UI_MES.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.6870229" vertical-offset="288" max-vertical-offset="1512">
-                  <caret line="25" column="29" selection-start-line="25" selection-start-column="29" selection-end-line="25" selection-end-column="29" />
-                  <folding>
-                    <marker date="1417625646468" expanded="true" signature="540:734" placeholder="..." />
-                    <marker date="1417625646468" expanded="true" signature="1656:2127" placeholder="..." />
-                    <marker date="1417625646468" expanded="true" signature="1656:1916" placeholder="..." />
-                  </folding>
+                <state vertical-scroll-proportion="0.03076923" vertical-offset="2098" max-vertical-offset="2448">
+                  <caret line="122" column="8" selection-start-line="122" selection-start-column="8" selection-end-line="122" selection-end-column="8" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -121,20 +118,20 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/Client.py" />
-        <option value="$PROJECT_DIR$/ClientMobile.py" />
         <option value="$PROJECT_DIR$/Resources.py" />
-        <option value="$PROJECT_DIR$/ClientCell.py" />
         <option value="$USER_HOME$/MES interface/mes.py" />
         <option value="$PROJECT_DIR$/Server.py" />
+        <option value="$PROJECT_DIR$/ClientCell.py" />
+        <option value="$PROJECT_DIR$/ClientMobile.py" />
         <option value="$PROJECT_DIR$/UI_MES.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1366" />
+    <option name="x" value="57" />
     <option name="y" value="24" />
-    <option name="width" value="1280" />
-    <option name="height" value="1000" />
+    <option name="width" value="1309" />
+    <option name="height" value="744" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -162,6 +159,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -182,7 +180,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -429,10 +426,10 @@
     <recent_temporary>
       <list size="5">
         <item index="0" class="java.lang.String" itemvalue="Python.UI_MES" />
-        <item index="1" class="java.lang.String" itemvalue="Python.Server" />
-        <item index="2" class="java.lang.String" itemvalue="Python.mes" />
-        <item index="3" class="java.lang.String" itemvalue="Python.ClientMobile" />
-        <item index="4" class="java.lang.String" itemvalue="Python.ClientCell" />
+        <item index="1" class="java.lang.String" itemvalue="Python.ClientCell" />
+        <item index="2" class="java.lang.String" itemvalue="Python.ClientMobile" />
+        <item index="3" class="java.lang.String" itemvalue="Python.Server" />
+        <item index="4" class="java.lang.String" itemvalue="Python.mes" />
       </list>
     </recent_temporary>
   </component>
@@ -486,28 +483,32 @@
       <created>1417620674571</created>
       <updated>1417620674571</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="added sending order function to MES (tested and working locally)">
+      <created>1417625902824</created>
+      <updated>1417625902824</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1366" y="24" width="1280" height="1000" extended-state="6" />
-    <editor active="false" />
+    <frame x="57" y="24" width="1309" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287037" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24375" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24904507" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39979655" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17044228" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="49" y="397" width="1871" height="317" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16989568" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="49" y="397" width="1871" height="317" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287037" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32960325" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287037" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -558,7 +559,8 @@
     <MESSAGE value="Attempt to fix bricks in orders" />
     <MESSAGE value="Made server able to handle continuous messages from the mobile robot while working" />
     <MESSAGE value="added server user interface" />
-    <option name="LAST_COMMIT_MESSAGE" value="added server user interface" />
+    <MESSAGE value="added sending order function to MES (tested and working locally)" />
+    <option name="LAST_COMMIT_MESSAGE" value="added sending order function to MES (tested and working locally)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -573,6 +575,14 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/UI_MES.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="450" max-vertical-offset="1584">
+          <caret line="25" column="29" selection-start-line="25" selection-start-column="29" selection-end-line="25" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/ClientCell.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1800">
@@ -934,38 +944,35 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ClientMobile.py">
+    <entry file="file://$PROJECT_DIR$/ClientCell.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1602">
-          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="77" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1800">
+          <caret line="11" column="15" selection-start-line="11" selection-start-column="15" selection-end-line="11" selection-end-column="15" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ClientCell.py">
+    <entry file="file://$PROJECT_DIR$/ClientMobile.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1230" max-vertical-offset="1800">
-          <caret line="85" column="32" selection-start-line="85" selection-start-column="32" selection-end-line="85" selection-end-column="32" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1602">
+          <caret line="8" column="74" selection-start-line="8" selection-start-column="74" selection-end-line="8" selection-end-column="74" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4770">
-          <caret line="33" column="19" selection-start-line="33" selection-start-column="19" selection-end-line="33" selection-end-column="19" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="3522" max-vertical-offset="5274">
+          <caret line="213" column="30" selection-start-line="213" selection-start-column="30" selection-end-line="213" selection-end-column="30" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/UI_MES.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6315789" vertical-offset="180" max-vertical-offset="1512">
-          <caret line="34" column="24" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
-          <folding>
-            <marker date="1417625646468" expanded="true" signature="1656:2127" placeholder="..." />
-            <marker date="1417625646468" expanded="true" signature="1656:1916" placeholder="..." />
-          </folding>
+        <state vertical-scroll-proportion="0.03076923" vertical-offset="2098" max-vertical-offset="2448">
+          <caret line="122" column="8" selection-start-line="122" selection-start-column="8" selection-end-line="122" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>
