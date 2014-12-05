@@ -4,12 +4,11 @@ __author__ = 'armienn & reaver'
 import argparse
 import threading
 import random
-import datetime
 from twisted.internet import task
 from twisted.internet import reactor
-import Queue
 from collections import deque
 from SimpleXMLRPCServer import SimpleXMLRPCServer
+import xmlrpclib
 import Resources
 
 # The resource handler
@@ -23,7 +22,12 @@ order_queue = deque([])
 free_robot_list = deque([])
 free_cell_list = deque([])
 
+dispenser = {'ip': 'http://127.0.0.1:8001',
+             'connected': False,
+             'connection': None}
+
 # MES functions
+
 
 def generate_order():
     # generate order
@@ -54,7 +58,7 @@ def mobile_status(m_status):
         print robot_name, ' is working on order #', resource_handler.resources[robot_name].bound_to_order.order['order_id']
 
         if m_status['state'] == 'STATE_FREE' or m_status['state'] == 'STATE_WORKING':
-            command = resource_handler.get_command_m(robot_name, m_status)
+            command = resource_handler.get_command_m(robot_name, m_status, dispenser)
 
             if command == 0:
                 command = {
@@ -79,7 +83,7 @@ def mobile_status(m_status):
                 print ' ', new_order.status, ' ', new_order.allocated_cell, ' ', new_order.allocated_robot
             command = 0
             if new_order != 0:
-                command = resource_handler.get_command_m(robot_name, m_status)
+                command = resource_handler.get_command_m(robot_name, m_status, dispenser)
                 print command
 
             if command == 0:
@@ -236,8 +240,21 @@ def get_active_orders():
         value.append(cell3order.order)
     return value
 
+
 def add_order(order):
     print(order)
+
+
+def register_dispenser(ip):
+    #dispenser['ip'] = ip
+    dispenser['connection'] = xmlrpclib.ServerProxy(dispenser['ip'], use_datetime=True)
+    dispenser['connected'] = True
+    print("Dispenser registered")
+
+
+def finished_dispensing():
+    resource_handler.dispenser_has_dispensed = True
+    print("Dispenser has dispensed")
 
 
 class ServerThread(threading.Thread):
@@ -245,6 +262,8 @@ class ServerThread(threading.Thread):
         threading.Thread.__init__(self)
         self.server = SimpleXMLRPCServer(server_addr, logRequests=True, allow_none=True)
         self.server.register_multicall_functions()
+        self.server.register_function(register_dispenser, 'register_dispenser')
+        self.server.register_function(finished_dispensing, 'finished_dispensing')
         self.server.register_function(cell_status, 'cell_status')
         self.server.register_function(mobile_status, 'mobile_status')
         self.server.register_function(print_state, 'print_state')
@@ -277,7 +296,7 @@ def main():
 
     # generate order
     l = task.LoopingCall(generate_order)
-    l.start(2.0)  # call every second
+    l.start(10.0)  # call every ten seconds
 
     # l.stop() will stop the looping calls
     reactor.run()
