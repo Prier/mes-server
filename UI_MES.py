@@ -4,8 +4,9 @@ import sys
 import xmlrpclib
 import datetime
 import time
-import threading
 from PyQt4 import QtCore, QtGui, uic
+from PyQt4.QtCore import QObject, pyqtSignal
+
 
 server = xmlrpclib.ServerProxy('http://127.0.0.1:8000', use_datetime=True)
 today = datetime.datetime.today()
@@ -17,43 +18,19 @@ setorder_class = uic.loadUiType("set_order.ui")[0]
 app = QtGui.QApplication(sys.argv)
 
 
-class UpdateThread(threading.Thread):
+class UpdateThread(QtCore.QThread, QObject):
+    update_status = pyqtSignal()
+
     def __init__(self, window):
-        threading.Thread.__init__(self)
-        self._window = window
+        QtCore.QThread.__init__(self)
+        self.update_status.connect(window.update_status)
 
     def run(self):
+        #QtCore.QThread.run(self)
+        print 'running'
         while True:
-            try:
-                status = server.get_status()
-
-                if status[0] != 0:
-                    self._window.cell1_label.setStyleSheet('background-color: green;')
-                else:
-                    self._window.cell1_label.setStyleSheet('background-color: red;')
-                if status[1] != 0:
-                    self._window.cell2_label.setStyleSheet('background-color: green;')
-                else:
-                    self._window.cell2_label.setStyleSheet('background-color: red;')
-                if status[2] != 0:
-                    self._window.cell3_label.setStyleSheet('background-color: green;')
-                else:
-                    self._window.cell3_label.setStyleSheet('background-color: red;')
-                if status[3] != 0:
-                    self._window.mobile1_label.setStyleSheet('background-color: green;')
-                else:
-                    self._window.mobile1_label.setStyleSheet('background-color: red;')
-                if status[4] != 0:
-                    self._window.mobile2_label.setStyleSheet('background-color: green;')
-                else:
-                    self._window.mobile2_label.setStyleSheet('background-color: red;')
-                if status[5] != 0:
-                    self._window.mobile3_label.setStyleSheet('background-color: green;')
-                else:
-                    self._window.mobile3_label.setStyleSheet('background-color: red;')
-                time.sleep(2)
-            except:
-                errorWin.show()
+            time.sleep(2)
+            self.update_status.emit()
 
 
 class orderWindowClass(QtGui.QMainWindow, setorder_class):
@@ -86,13 +63,14 @@ class errorWindowClass(QtGui.QMainWindow, dialog_class):
         self.ok_btn.clicked.connect(self.ok_btn_clicked)
 
     def ok_btn_clicked(self):
-        errorWin.close()
+        errorWin.show()
 errorWin = errorWindowClass(None)
 
 
 class MyWindowClass(QtGui.QMainWindow, form_class):
     def __init__(self, parent=None):
         QtGui.QMainWindow.__init__(self, parent)
+        #super(UpdateThread, self).__init__()
         self.setupUi(self)
         self.exit_button.clicked.connect(self.exit_button_clicked)  # Bind the event handlers
         self.generate_order.clicked.connect(self.generate_order_clicked)  # to the buttons
@@ -106,8 +84,8 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
         self.mobile3_label.setStyleSheet('background-color: red;')
         self.dispencer_label.setStyleSheet('background-color: red;')
 
-        update_thread = UpdateThread(self)
-        update_thread.start()
+        self.update_thread = UpdateThread(self)
+        self.update_thread.start()
 
     def exit_button_clicked(self):
         mainWin.close()
@@ -121,16 +99,44 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
         #server = xmlrpclib.ServerProxy('http://192.168.1.50:8000', use_datetime=True)
         #errorWin.show()
         return
+
+    def update_status(self):
+        try:
+            status = server.get_status()
+
+            if status[0] != 0:
+                self.cell1_label.setStyleSheet('background-color: green;')
+            else:
+                self.cell1_label.setStyleSheet('background-color: red;')
+            if status[1] != 0:
+                self.cell2_label.setStyleSheet('background-color: green;')
+            else:
+                self.cell2_label.setStyleSheet('background-color: red;')
+            if status[2] != 0:
+                self.cell3_label.setStyleSheet('background-color: green;')
+            else:
+                self.cell3_label.setStyleSheet('background-color: red;')
+            if status[3] != 0:
+                self.mobile1_label.setStyleSheet('background-color: green;')
+            else:
+                self.mobile1_label.setStyleSheet('background-color: red;')
+            if status[4] != 0:
+                self.mobile2_label.setStyleSheet('background-color: green;')
+            else:
+                self.mobile2_label.setStyleSheet('background-color: red;')
+            if status[5] != 0:
+                self.mobile3_label.setStyleSheet('background-color: green;')
+            else:
+                self.mobile3_label.setStyleSheet('background-color: red;')
+            print 'Status Updated'
+        except:
+            errorWin.show()
 mainWin = MyWindowClass(None)
 
 
-def startWin():
+def main():
     mainWin.show()
     app.exec_()
-
-
-def main():
-    startWin()
 
 if __name__ == "__main__":
     main()
