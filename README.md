@@ -143,3 +143,28 @@ uint8 COLOR_YELLOW = 2
 uint8 color
 uint8 count
 ```
+
+### Extra area info
+
+There are some marks with coordinates on the floor in robolab, which should fit together with the coordinates returned by the camera locator. Going by these coordinates, we have defined the various areas as rectangles. Below is a list of the areas along with the lower left and upper right corner (the loadoff1 and loadon1 are very approximate):
+
+```
+FloorOut,  -2.00,-2.15,   -0.15, 1.00,
+FloorIn,   -0.15,-2.15,    2.50, 1.00,
+RampOut,   -1.00,-4.70,   -0.15,-2.15,
+RampIn,    -0.15,-4.10,    0.40,-2.15,
+InBox,     -0.15,-5.80,    0.35,-4.10,
+Dispenser, -1.00,-5.80,   -0.15,-4.70,
+Station1,   0.35,-4.65,    1.15,-4.10,
+Station2,   0.35,-5.20,    1.15,-4.65,
+Station3,   0.35,-5.80,    1.15,-5.20,
+LineLeft,  -4.00, 0.00,   -2.00, 1.95,
+LineMid,   -2.00, 1.00,    2.50, 1.95,
+LineRight,  2.50, 0.00,    5.50, 1.95,
+LoadOff1,   3.40, 1.95,    4.00, 3.00,
+LoadOn1,    4.00, 1.95,    4.60, 3.00,
+LoadOff2,   0.75, 1.95,    1.35, 3.00,
+LoadOn2,    1.35, 1.95,    1.95, 3.00,
+LoadOff3,  -2.20, 1.95,   -1.60, 3.00,
+LoadOn3,   -1.60, 1.95,   -1.00, 3.00
+```
