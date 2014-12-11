@@ -4,12 +4,15 @@ __author__ = 'armienn & reaver'
 import argparse
 import threading
 import random
+import datetime
 from twisted.internet import task
 from twisted.internet import reactor
 from collections import deque
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 import xmlrpclib
 import Resources
+
+log_name = str(datetime.date.today()) + " " + str(datetime.datetime.today().hour) + "-" + str(datetime.datetime.today().minute) + '.txt'
 
 # The resource handler
 
@@ -47,6 +50,10 @@ def add_order(bricks):
     }
     order_queue.append(order)
     print("Added order: " + str(order))
+    f = open(log_name, 'a')
+    f.write(str(datetime.datetime.today()) + '\n')
+    f.write("  Added order: " + str(order) + '\n')
+    f.close()
 
 
 def print_state(robot_status):
@@ -54,8 +61,12 @@ def print_state(robot_status):
 
 
 def mobile_status(m_status):
+    f = open(log_name, 'a')
+    f.write(str(datetime.datetime.today()) + '\n')
+    f.write("  Message from mobile:\n")
     for k, v in m_status.items():
         print k, ' = ', v
+        f.write("    " + str(k) + " = " + str(v) + '\n')
 
     robot_id = m_status['robot_id']
     robot_name = Resources.get_mobile_robot_name(robot_id)
@@ -72,13 +83,12 @@ def mobile_status(m_status):
                 }
                 print robot_name, ' is waiting\n'
             print robot_name, ' got: '+command['command']+'\n'
-            return command
 
         elif m_status['state'] == 'STATE_ERROR':
-            return dict(command='COMMAND_ABORT')
+            command = dict(command='COMMAND_ABORT')
 
         else:
-            return dict(command='COMMAND_ABORT')
+            command = dict(command='COMMAND_ABORT')
     else:
         if m_status['state'] == 'STATE_FREE':
             print robot_name, ' is available\n'
@@ -97,24 +107,33 @@ def mobile_status(m_status):
                     'command': 'COMMAND_WAIT'
                 }
             print robot_name, ' is waiting\n'
-            return command
 
         elif m_status['state'] == 'STATE_WORKING':  # This shouldn't happen
             print robot_name, ' is working\n'
-            return dict(command='COMMAND_ABORT')
+            command = dict(command='COMMAND_ABORT')
 
         elif m_status['state'] == 'STATE_ERROR':
             print robot_name, ' has encountered an error! ABORTING...\n'
-            return dict(command='COMMAND_ABORT')
+            command = dict(command='COMMAND_ABORT')
 
         else:
             print robot_name, ': Error in states! ABORTING...\n'
-            return dict(command='COMMAND_ABORT')
+            command = dict(command='COMMAND_ABORT')
+
+    f.write("  Returning command:\n")
+    for k, v in command.items():
+        f.write("    " + str(k) + " = " + str(v) + '\n')
+    f.close()
+    return command
 
 
 def cell_status(c_status):
+    f = open(log_name, 'a')
+    f.write(str(datetime.datetime.today()) + '\n')
+    f.write("  Message from cell:\n")
     for k, v in c_status.items():
         print k, ' = ', v
+        f.write("    " + str(k) + " = " + str(v) + '\n')
 
     # Save state information
     cell_id = c_status['robot_id']
@@ -131,7 +150,6 @@ def cell_status(c_status):
                     'command': 'COMMAND_WAIT'
                 }
                 print robot_name, ' is waiting\n'
-            return command
 
         elif c_status['state'] == 'STATE_SORTING':
             print robot_name, ' is sorting\n'
@@ -141,7 +159,6 @@ def cell_status(c_status):
                     'command': 'COMMAND_WAIT'
                 }
                 print robot_name, ' is waiting\n'
-            return command
 
         elif c_status['state'] == 'STATE_ORDERSORTED':
             print robot_name, ' is done sorting\n'
@@ -151,7 +168,6 @@ def cell_status(c_status):
                     'command': 'COMMAND_WAIT'
                 }
                 print robot_name, ' is waiting\n'
-            return command
 
         elif c_status['state'] == 'STATE_OUTOFBRICKS':
             print robot_name, ' is out of bricks\n'
@@ -161,7 +177,6 @@ def cell_status(c_status):
                     'command': 'COMMAND_WAIT'
                 }
                 print robot_name, ' is waiting\n'
-            return command
 
         elif c_status['state'] == 'STATE_LOADING':
             print robot_name, ' is loading bricks\n'
@@ -171,15 +186,14 @@ def cell_status(c_status):
                     'command': 'COMMAND_WAIT'
                 }
                 print robot_name, ' is waiting\n'
-            return command
 
         elif c_status['state'] == 'STATE_ERROR':
             print robot_name, ' has encountered an error! ABORTING...\n'
-            return dict(command='COMMAND_ABORT')
+            command = dict(command='COMMAND_ABORT')
 
         else:
             print robot_name, ': Error in states! ABORTING...\n'
-            return dict(command='COMMAND_ABORT')
+            command = dict(command='COMMAND_ABORT')
     else:
         if c_status['state'] == 'STATE_FREE':
 
@@ -187,23 +201,29 @@ def cell_status(c_status):
                 'command': 'COMMAND_WAIT'
             }
             print robot_name, ' is waiting\n'
-            return command
 
         elif c_status['state'] == 'STATE_ORDERSORTED':  # shouldn't happen
             print robot_name, ': Error in states! ABORTING...\n'
-            return dict(command='COMMAND_ABORT')
+            command = dict(command='COMMAND_ABORT')
 
         elif c_status['state'] == 'STATE_LOADING':  # shouldn't happen
             print robot_name, ': Error in states! ABORTING...\n'
-            return dict(command='COMMAND_ABORT')
+            command = dict(command='COMMAND_ABORT')
 
         elif c_status['state'] == 'STATE_ERROR':
             print robot_name, ' has encountered an error! ABORTING...\n'
-            return dict(command='COMMAND_ABORT')
+            command = dict(command='COMMAND_ABORT')
 
         else:
             print robot_name, ': Error in states! ABORTING...\n'
-            return dict(command='COMMAND_ABORT')
+            command = dict(command='COMMAND_ABORT')
+
+    f.write("  Returning command:\n")
+    for k, v in command.items():
+        f.write("    " + str(k) + " = " + str(v) + '\n')
+    f.close()
+    return command
+
 
 def get_status():
     cell1order = resource_handler.resources['Cell1'].bound_to_order
@@ -279,6 +299,9 @@ class ServerThread(threading.Thread):
 
 
 def run_server(host, port):
+    f = open(log_name, 'w')
+    f.write('MES starting with host as ' + str(host) + ' and port ' + str(port) + '\n')
+    f.close()
     # server code
     server_addr = (host, port)
     server = ServerThread(server_addr)
