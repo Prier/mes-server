@@ -8,12 +8,13 @@ from PyQt4 import QtCore, QtGui, uic
 from PyQt4.QtCore import QObject, pyqtSignal
 
 
-server = xmlrpclib.ServerProxy('http://127.0.0.1:8000', use_datetime=True)
+server = xmlrpclib.ServerProxy('http://127.0.0.1:8000', use_datetime=True) #server = xmlrpclib.ServerProxy('http://192.168.1.50:8000', use_datetime=True)
 today = datetime.datetime.today()
 timeofday = time.clock()
 
 form_class = uic.loadUiType("mes_interface.ui")[0]
 dialog_class = uic.loadUiType("conn_error_msg.ui")[0]
+support_class = uic.loadUiType("support_msg.ui")[0]
 setorder_class = uic.loadUiType("set_order.ui")[0]
 app = QtGui.QApplication(sys.argv)
 
@@ -48,7 +49,10 @@ class orderWindowClass(QtGui.QMainWindow, setorder_class):
             {'color': 'COLOR_RED', 'size': 6, 'count': red},
             {'color': 'COLOR_BLUE', 'size': 6, 'count': blue},
             {'color': 'COLOR_YELLOW', 'size': 6, 'count': yellow}]
-        server.add_order(order)
+        try:
+            server.add_order(order)
+        except:
+            errorWin.show()
         orderWin.close()
 
     def cncl_btn_clicked(self):
@@ -63,8 +67,19 @@ class errorWindowClass(QtGui.QMainWindow, dialog_class):
         self.ok_btn.clicked.connect(self.ok_btn_clicked)
 
     def ok_btn_clicked(self):
-        errorWin.show()
+        errorWin.close()
 errorWin = errorWindowClass(None)
+
+
+class supportWindowClass(QtGui.QMainWindow, support_class):
+    def __init__(self, parent=None):
+        QtGui.QMainWindow.__init__(self, parent)
+        self.setupUi(self)
+        self.ok_btn.clicked.connect(self.ok_btn_clicked)
+
+    def ok_btn_clicked(self):
+        supportWin.close()
+supportWin = supportWindowClass(None)
 
 
 class MyWindowClass(QtGui.QMainWindow, form_class):
@@ -74,7 +89,7 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
         self.setupUi(self)
         self.exit_button.clicked.connect(self.exit_button_clicked)  # Bind the event handlers
         self.generate_order.clicked.connect(self.generate_order_clicked)  # to the buttons
-        self.start_btn.clicked.connect(self.start_btn_clicked)
+        self.support_btn.clicked.connect(self.support_btn_clicked)
 
         self.cell1_label.setStyleSheet('background-color: red;')
         self.cell2_label.setStyleSheet('background-color: red;')
@@ -83,6 +98,7 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
         self.mobile2_label.setStyleSheet('background-color: red;')
         self.mobile3_label.setStyleSheet('background-color: red;')
         self.dispencer_label.setStyleSheet('background-color: red;')
+        self.conn_label.setStyleSheet('background-color: red;')
 
         self.update_thread = UpdateThread(self)
         self.update_thread.start()
@@ -94,15 +110,13 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
         orderWin.show()
         # generate order
 
-    def start_btn_clicked(self):
-        #try:
-        #server = xmlrpclib.ServerProxy('http://192.168.1.50:8000', use_datetime=True)
-        #errorWin.show()
-        return
+    def support_btn_clicked(self):
+        supportWin.show()
 
     def update_status(self):
         try:
             status = server.get_status()
+            self.conn_label.setStyleSheet('background-color: green;')
 
             if status[0] != 0:
                 self.cell1_label.setStyleSheet('background-color: green;')
@@ -130,7 +144,7 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
                 self.mobile3_label.setStyleSheet('background-color: red;')
             print 'Status Updated'
         except:
-            errorWin.show()
+            self.conn_label.setStyleSheet('background-color: red;')
 mainWin = MyWindowClass(None)
 
 
