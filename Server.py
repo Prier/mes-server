@@ -15,6 +15,8 @@ import Resources
 start_up_time = datetime.datetime.today()
 
 log_name = "log " + str(start_up_time.date()) + " " + str(start_up_time.hour) + "-" + str(start_up_time.minute) + '.txt'
+last_log = datetime.datetime.today()
+log = ""
 
 # The resource handler
 
@@ -52,10 +54,8 @@ def add_order(bricks):
     }
     order_queue.append(order)
     print("Added order: " + str(order))
-    f = open(log_name, 'a')
-    f.write(str(datetime.datetime.today()) + '\n')
-    f.write("  Added order: " + str(order) + '\n')
-    f.close()
+    log_write(str(datetime.datetime.today()) + '\n')
+    log_write("  Added order: " + str(order) + '\n')
 
 
 def print_state(robot_status):
@@ -63,12 +63,11 @@ def print_state(robot_status):
 
 
 def mobile_status(m_status):
-    f = open(log_name, 'a')
-    f.write(str(datetime.datetime.today()) + '\n')
-    f.write("  Message from mobile:\n")
+    log_write(str(datetime.datetime.today()) + '\n')
+    log_write("  Message from mobile:\n")
     for k, v in m_status.items():
         print k, ' = ', v
-        f.write("    " + str(k) + " = " + str(v) + '\n')
+        log_write("    " + str(k) + " = " + str(v) + '\n')
 
     robot_id = m_status['robot_id']
     resource_handler.get_mobile_robot(robot_id).alive = True
@@ -123,20 +122,18 @@ def mobile_status(m_status):
             print robot_name, ': Error in states! ABORTING...\n'
             command = dict(command='COMMAND_ABORT')
 
-    f.write("  Returning command:\n")
+    log_write("  Returning command:\n")
     for k, v in command.items():
-        f.write("    " + str(k) + " = " + str(v) + '\n')
-    f.close()
+        log_write("    " + str(k) + " = " + str(v) + '\n')
     return command
 
 
 def cell_status(c_status):
-    f = open(log_name, 'a')
-    f.write(str(datetime.datetime.today()) + '\n')
-    f.write("  Message from cell:\n")
+    log_write(str(datetime.datetime.today()) + '\n')
+    log_write("  Message from cell:\n")
     for k, v in c_status.items():
         print k, ' = ', v
-        f.write("    " + str(k) + " = " + str(v) + '\n')
+        log_write("    " + str(k) + " = " + str(v) + '\n')
 
     # Save state information
     cell_id = c_status['robot_id']
@@ -221,11 +218,32 @@ def cell_status(c_status):
             print robot_name, ': Error in states! ABORTING...\n'
             command = dict(command='COMMAND_ABORT')
 
-    f.write("  Returning command:\n")
+    log_write("  Returning command:\n")
     for k, v in command.items():
-        f.write("    " + str(k) + " = " + str(v) + '\n')
-    f.close()
+        log_write("    " + str(k) + " = " + str(v) + '\n')
     return command
+
+
+def log_write(text):
+    global log, last_log
+    log += text
+    if (datetime.datetime.today() - last_log) > datetime.timedelta(seconds=10):
+        last_log = datetime.datetime.today()
+        f = open(log_name, 'a')
+        f.write(log)
+        f.close()
+        log = ""
+
+
+def get_log():
+    global log, last_log
+    last_log = datetime.datetime.today()
+    f = open(log_name, 'a')
+    f.write(log)
+    f.close()
+    local_log = log
+    log = ""
+    return local_log
 
 
 def get_status():
@@ -324,6 +342,7 @@ class ServerThread(threading.Thread):
         self.server.register_function(get_active_orders, 'get_active_orders')
         self.server.register_function(add_order, 'add_order')
         self.server.register_function(get_status, 'get_status')
+        self.server.register_function(get_log, 'get_log')
 
     def run(self):
         self.server.serve_forever()
