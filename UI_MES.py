@@ -5,6 +5,7 @@ import xmlrpclib
 import datetime
 import time
 from PyQt4 import QtCore, QtGui, uic
+from PyQt4.QtGui import *
 from PyQt4.QtCore import QObject, pyqtSignal
 
 
@@ -118,6 +119,20 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
             status = server.get_status()
             self.conn_label.setStyleSheet('background-color: green;')
 
+            # status log from server
+            log_text = server.get_log()
+            self.status_log_box.append(log_text)
+
+            # OEE from server
+            oee = server.get_OEE_data()
+            uptime = oee['uptime']
+            orders_waiting = oee['orders_waiting']
+            orders_processed = oee['orders_processed']
+            self.oee_log_box.setText("Uptime: " + "\n" + uptime + "\n\n" +
+                                    "Orders Waiting: " + str(orders_waiting) + "\n\n" +
+                                    "Orders Processed: " + str(orders_processed) + "\n\n")
+
+            # light control
             if status['Cell1']['alive']:
                 if status['Cell1']['order'] != 0:
                     self.cell1_label.setStyleSheet('background-color: green;')
