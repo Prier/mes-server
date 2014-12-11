@@ -343,6 +343,7 @@ class ServerThread(threading.Thread):
         self.server.register_function(add_order, 'add_order')
         self.server.register_function(get_status, 'get_status')
         self.server.register_function(get_log, 'get_log')
+        self.server.register_function(get_OEE_data, 'get_OEE_data')
 
     def run(self):
         self.server.serve_forever()
