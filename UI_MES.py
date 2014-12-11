@@ -182,6 +182,11 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
                 self.mobile3_label.setStyleSheet('background-color: red;')
 
             print 'Status Updated'
+
+            if status['Dispenser']:
+                self.dispencer_label.setStyleSheet('background-color: green;')
+            else:
+                self.dispencer_label.setStyleSheet('background-color: red;')
         except:
             self.conn_label.setStyleSheet('background-color: red;')
 mainWin = MyWindowClass(None)

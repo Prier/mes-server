@@ -102,7 +102,7 @@ def mobile_status(m_status):
                 print ' ', new_order.status, ' ', new_order.allocated_cell, ' ', new_order.allocated_robot
             command = 0
             if new_order != 0:
-                command = resource_handler.get_command_m(robot_name, m_status, dispenser)
+                command = resource_handler.get_command_m(robot_name, m_status, dispenser, finish_order)
                 print command
 
             if command == 0:
@@ -278,6 +278,8 @@ def get_status():
               'taken': resource_handler.resources['Mobile3'].taken,
               'alive': resource_handler.resources['Mobile3'].alive}
     value['Mobile3'] = status.copy()
+
+    value['Dispenser'] = dispenser['connected']
 
     print(str(value))
     return value
