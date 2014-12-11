@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="start_btn">
+   <widget class="QPushButton" name="support_btn">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>CONNECT MES</string>
+     <string>SUPPORT</string>
     </property>
    </widget>
    <widget class="QListView" name="status_box">
@@ -118,7 +118,7 @@
     <property name="geometry">
      <rect>
       <x>440</x>
-      <y>50</y>
+      <y>80</y>
       <width>66</width>
       <height>17</height>
      </rect>
@@ -131,7 +131,7 @@
     <property name="geometry">
      <rect>
       <x>440</x>
-      <y>80</y>
+      <y>110</y>
       <width>66</width>
       <height>17</height>
      </rect>
@@ -144,7 +144,7 @@
     <property name="geometry">
      <rect>
       <x>440</x>
-      <y>110</y>
+      <y>140</y>
       <width>66</width>
       <height>17</height>
      </rect>
@@ -157,7 +157,7 @@
     <property name="geometry">
      <rect>
       <x>440</x>
-      <y>140</y>
+      <y>170</y>
       <width>66</width>
       <height>17</height>
      </rect>
@@ -170,7 +170,7 @@
     <property name="geometry">
      <rect>
       <x>440</x>
-      <y>230</y>
+      <y>260</y>
       <width>81</width>
       <height>17</height>
      </rect>
@@ -183,7 +183,7 @@
     <property name="geometry">
      <rect>
       <x>440</x>
-      <y>170</y>
+      <y>200</y>
       <width>66</width>
       <height>17</height>
      </rect>
@@ -196,7 +196,7 @@
     <property name="geometry">
      <rect>
       <x>440</x>
-      <y>200</y>
+      <y>230</y>
       <width>66</width>
       <height>17</height>
      </rect>
@@ -209,7 +209,7 @@
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>50</y>
+      <y>80</y>
       <width>66</width>
       <height>17</height>
      </rect>
@@ -222,7 +222,7 @@
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>80</y>
+      <y>110</y>
       <width>66</width>
       <height>17</height>
      </rect>
@@ -235,7 +235,7 @@
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>110</y>
+      <y>140</y>
       <width>66</width>
       <height>17</height>
      </rect>
@@ -248,7 +248,7 @@
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>140</y>
+      <y>170</y>
       <width>66</width>
       <height>17</height>
      </rect>
@@ -261,7 +261,7 @@
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>170</y>
+      <y>200</y>
       <width>66</width>
       <height>17</height>
      </rect>
@@ -274,7 +274,7 @@
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>200</y>
+      <y>230</y>
       <width>66</width>
       <height>17</height>
      </rect>
@@ -287,7 +287,33 @@
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>230</y>
+      <y>260</y>
+      <width>66</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="conn_label_2">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>50</y>
+      <width>111</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>MES Connection</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="conn_label">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>50</y>
       <width>66</width>
       <height>17</height>
      </rect>
