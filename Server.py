@@ -31,16 +31,22 @@ dispenser = {'ip': 'http://127.0.0.1:8001',
 
 def generate_order():
     # generate order
+    bricks = [
+        dict(color='COLOR_RED', size=6, count=random.randint(0, 8)),
+        dict(color='COLOR_BLUE', size=6, count=random.randint(0, 8)),
+        dict(color='COLOR_YELLOW', size=6, count=random.randint(0, 8))]
+    add_order(bricks)
+
+
+def add_order(bricks):
     global order_id
     order_id += 1
     order = {
         'order_id': order_id,
-        'bricks': [
-            dict(color='COLOR_RED', size=6, count=random.randint(0, 8)),
-            dict(color='COLOR_BLUE', size=6, count=random.randint(0, 8)),
-            dict(color='COLOR_YELLOW', size=6, count=random.randint(0, 8))]
+        'bricks': bricks
     }
     order_queue.append(order)
+    print("Added order: " + str(order))
 
 
 def print_state(robot_status):
@@ -241,10 +247,6 @@ def get_active_orders():
     return value
 
 
-def add_order(order):
-    print(order)
-
-
 def register_dispenser(ip):
     #dispenser['ip'] = ip
     dispenser['connection'] = xmlrpclib.ServerProxy(dispenser['ip'], use_datetime=True)
@@ -295,11 +297,11 @@ def main():
     run_server(host, port)
 
     # generate order
-    l = task.LoopingCall(generate_order)
-    l.start(10.0)  # call every ten seconds
+    #l = task.LoopingCall(generate_order)
+    #l.start(10.0)  # call every ten seconds
 
     # l.stop() will stop the looping calls
-    reactor.run()
+    #reactor.run()
 
 
 if __name__ == "__main__":

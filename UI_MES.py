@@ -29,7 +29,7 @@ class UpdateThread(QtCore.QThread, QObject):
         #QtCore.QThread.run(self)
         print 'running'
         while True:
-            time.sleep(2)
+            time.sleep(5)
             self.update_status.emit()
 
 
