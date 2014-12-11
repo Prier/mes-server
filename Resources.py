@@ -132,7 +132,7 @@ class ResourceHandler():
 
         return order
 
-    def get_command_m(self, robot_name, m_status, dispenser):
+    def get_command_m(self, robot_name, m_status, dispenser, finish_order):
         current_order = self.resources[robot_name].bound_to_order
         current_pos = m_status['position']
         current_order.deallocate(self.resources)
@@ -359,6 +359,8 @@ class ResourceHandler():
                 command = {
                     'command': 'COMMAND_WAIT'
                 }
+            else:
+                finish_order(current_order.order)
             print 'processed mobile command for order status OS_RETURN'
 
         else:

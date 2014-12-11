@@ -17,6 +17,7 @@ start_up_time = datetime.datetime.today()
 log_name = "log " + str(start_up_time.date()) + " " + str(start_up_time.hour) + "-" + str(start_up_time.minute) + '.txt'
 last_log = datetime.datetime.today()
 log = ""
+finished_orders = 0
 
 # The resource handler
 
@@ -77,7 +78,7 @@ def mobile_status(m_status):
         print robot_name, ' is working on order #', resource_handler.resources[robot_name].bound_to_order.order['order_id']
 
         if m_status['state'] == 'STATE_FREE' or m_status['state'] == 'STATE_WORKING':
-            command = resource_handler.get_command_m(robot_name, m_status, dispenser)
+            command = resource_handler.get_command_m(robot_name, m_status, dispenser, finish_order)
 
             if command == 0:
                 command = {
@@ -312,8 +313,16 @@ def get_OEE_data():
     minutes, seconds = divmod(remainder, 60)
     data['uptime'] = "Days: " + str(delta.days) + " H:M:S: " + str(hours) + ":" + str(minutes) + ":" + str(seconds)
     data['orders_waiting'] = len(order_queue)
-    data['orders_processed'] = 0
+    data['orders_processed'] = finished_orders
     return data
+
+
+def finish_order(order):
+    log_write(str(datetime.datetime.today()) + '\n')
+    log_write("  Finished order:\n")
+    log_write("    " + str(order))
+    global finished_orders
+    finished_orders += 1
 
 
 def register_dispenser(ip):
