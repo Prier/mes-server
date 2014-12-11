@@ -118,30 +118,54 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
             status = server.get_status()
             self.conn_label.setStyleSheet('background-color: green;')
 
-            if status[0] != 0:
-                self.cell1_label.setStyleSheet('background-color: green;')
+            if status['Cell1']['alive']:
+                if status['Cell1']['order'] != 0:
+                    self.cell1_label.setStyleSheet('background-color: green;')
+                else:
+                    self.cell1_label.setStyleSheet('background-color: yellow;')
             else:
                 self.cell1_label.setStyleSheet('background-color: red;')
-            if status[1] != 0:
-                self.cell2_label.setStyleSheet('background-color: green;')
+
+            if status['Cell2']['alive']:
+                if status['Cell2']['order'] != 0:
+                    self.cell2_label.setStyleSheet('background-color: green;')
+                else:
+                    self.cell2_label.setStyleSheet('background-color: yellow;')
             else:
                 self.cell2_label.setStyleSheet('background-color: red;')
-            if status[2] != 0:
-                self.cell3_label.setStyleSheet('background-color: green;')
+
+            if status['Cell3']['alive']:
+                if status['Cell3']['order'] != 0:
+                    self.cell3_label.setStyleSheet('background-color: green;')
+                else:
+                    self.cell3_label.setStyleSheet('background-color: yellow;')
             else:
                 self.cell3_label.setStyleSheet('background-color: red;')
-            if status[3] != 0:
-                self.mobile1_label.setStyleSheet('background-color: green;')
+
+            if status['Mobile1']['alive']:
+                if status['Mobile1']['order'] != 0:
+                    self.mobile1_label.setStyleSheet('background-color: green;')
+                else:
+                    self.mobile1_label.setStyleSheet('background-color: yellow;')
             else:
                 self.mobile1_label.setStyleSheet('background-color: red;')
-            if status[4] != 0:
-                self.mobile2_label.setStyleSheet('background-color: green;')
+
+            if status['Mobile2']['alive']:
+                if status['Mobile2']['order'] != 0:
+                    self.mobile2_label.setStyleSheet('background-color: green;')
+                else:
+                    self.mobile2_label.setStyleSheet('background-color: yellow;')
             else:
                 self.mobile2_label.setStyleSheet('background-color: red;')
-            if status[5] != 0:
-                self.mobile3_label.setStyleSheet('background-color: green;')
+
+            if status['Mobile3']['alive']:
+                if status['Mobile3']['order'] != 0:
+                    self.mobile3_label.setStyleSheet('background-color: green;')
+                else:
+                    self.mobile3_label.setStyleSheet('background-color: yellow;')
             else:
                 self.mobile3_label.setStyleSheet('background-color: red;')
+
             print 'Status Updated'
         except:
             self.conn_label.setStyleSheet('background-color: red;')

@@ -14,7 +14,7 @@ import Resources
 
 start_up_time = datetime.datetime.today()
 
-log_name = "log " + str(start_up_time.date) + " " + str(start_up_time.hour) + "-" + str(start_up_time.minute) + '.txt'
+log_name = "log " + str(start_up_time.date()) + " " + str(start_up_time.hour) + "-" + str(start_up_time.minute) + '.txt'
 
 # The resource handler
 
@@ -71,6 +71,7 @@ def mobile_status(m_status):
         f.write("    " + str(k) + " = " + str(v) + '\n')
 
     robot_id = m_status['robot_id']
+    resource_handler.get_mobile_robot(robot_id).alive = True
     robot_name = Resources.get_mobile_robot_name(robot_id)
     order = resource_handler.get_mobile_robot(robot_id).bound_to_order
     if order != 0:
@@ -230,35 +231,36 @@ def cell_status(c_status):
 def get_status():
     value = {}
     status = {'order': resource_handler.resources['Cell1'].bound_to_order,
-                   'taken': resource_handler.resources['Cell1'].taken,
-                   'alive': resource_handler.resources['Cell1'].alive}
+              'taken': resource_handler.resources['Cell1'].taken,
+              'alive': resource_handler.resources['Cell1'].alive}
     value['Cell1'] = status.copy()
 
     status = {'order': resource_handler.resources['Cell2'].bound_to_order,
-                   'taken': resource_handler.resources['Cell2'].taken,
-                   'alive': resource_handler.resources['Cell2'].alive}
+              'taken': resource_handler.resources['Cell2'].taken,
+              'alive': resource_handler.resources['Cell2'].alive}
     value['Cell2'] = status.copy()
 
     status = {'order': resource_handler.resources['Cell3'].bound_to_order,
-                   'taken': resource_handler.resources['Cell3'].taken,
-                   'alive': resource_handler.resources['Cell3'].alive}
+              'taken': resource_handler.resources['Cell3'].taken,
+              'alive': resource_handler.resources['Cell3'].alive}
     value['Cell3'] = status.copy()
 
     status = {'order': resource_handler.resources['Mobile1'].bound_to_order,
-                   'taken': resource_handler.resources['Mobile1'].taken,
-                   'alive': resource_handler.resources['Mobile1'].alive}
+              'taken': resource_handler.resources['Mobile1'].taken,
+              'alive': resource_handler.resources['Mobile1'].alive}
     value['Mobile1'] = status.copy()
 
     status = {'order': resource_handler.resources['Mobile2'].bound_to_order,
-                   'taken': resource_handler.resources['Mobile2'].taken,
-                   'alive': resource_handler.resources['Mobile2'].alive}
+              'taken': resource_handler.resources['Mobile2'].taken,
+              'alive': resource_handler.resources['Mobile2'].alive}
     value['Mobile2'] = status.copy()
 
     status = {'order': resource_handler.resources['Mobile3'].bound_to_order,
-                   'taken': resource_handler.resources['Mobile3'].taken,
-                   'alive': resource_handler.resources['Mobile3'].alive}
+              'taken': resource_handler.resources['Mobile3'].taken,
+              'alive': resource_handler.resources['Mobile3'].alive}
     value['Mobile3'] = status.copy()
 
+    print(str(value))
     return value
 
 
