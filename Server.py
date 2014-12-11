@@ -12,7 +12,9 @@ from SimpleXMLRPCServer import SimpleXMLRPCServer
 import xmlrpclib
 import Resources
 
-log_name = str(datetime.date.today()) + " " + str(datetime.datetime.today().hour) + "-" + str(datetime.datetime.today().minute) + '.txt'
+start_up_time = datetime.datetime.today()
+
+log_name = "log " + str(start_up_time.date) + " " + str(start_up_time.hour) + "-" + str(start_up_time.minute) + '.txt'
 
 # The resource handler
 
@@ -226,23 +228,39 @@ def cell_status(c_status):
 
 
 def get_status():
-    cell1order = resource_handler.resources['Cell1'].bound_to_order
-    cell2order = resource_handler.resources['Cell2'].bound_to_order
-    cell3order = resource_handler.resources['Cell3'].bound_to_order
+    value = {}
+    status = {'order': resource_handler.resources['Cell1'].bound_to_order,
+                   'taken': resource_handler.resources['Cell1'].taken,
+                   'alive': resource_handler.resources['Cell1'].alive}
+    value['Cell1'] = status.copy()
 
-    mobile1order = resource_handler.resources['Mobile1'].bound_to_order
-    mobile2order = resource_handler.resources['Mobile2'].bound_to_order
-    mobile3order = resource_handler.resources['Mobile3'].bound_to_order
+    status = {'order': resource_handler.resources['Cell2'].bound_to_order,
+                   'taken': resource_handler.resources['Cell2'].taken,
+                   'alive': resource_handler.resources['Cell2'].alive}
+    value['Cell2'] = status.copy()
 
-    value = []
+    status = {'order': resource_handler.resources['Cell3'].bound_to_order,
+                   'taken': resource_handler.resources['Cell3'].taken,
+                   'alive': resource_handler.resources['Cell3'].alive}
+    value['Cell3'] = status.copy()
 
-    value.append(cell1order)
-    value.append(cell2order)
-    value.append(cell3order)
-    value.append(mobile1order)
-    value.append(mobile2order)
-    value.append(mobile3order)
+    status = {'order': resource_handler.resources['Mobile1'].bound_to_order,
+                   'taken': resource_handler.resources['Mobile1'].taken,
+                   'alive': resource_handler.resources['Mobile1'].alive}
+    value['Mobile1'] = status.copy()
+
+    status = {'order': resource_handler.resources['Mobile2'].bound_to_order,
+                   'taken': resource_handler.resources['Mobile2'].taken,
+                   'alive': resource_handler.resources['Mobile2'].alive}
+    value['Mobile2'] = status.copy()
+
+    status = {'order': resource_handler.resources['Mobile3'].bound_to_order,
+                   'taken': resource_handler.resources['Mobile3'].taken,
+                   'alive': resource_handler.resources['Mobile3'].alive}
+    value['Mobile3'] = status.copy()
+
     return value
+
 
 def get_inactive_orders():
     value = []
@@ -265,6 +283,17 @@ def get_active_orders():
     if cell3order != 0:
         value.append(cell3order.order)
     return value
+
+
+def get_OEE_data():
+    data = {}
+    delta = datetime.datetime.today() - start_up_time
+    hours, remainder = divmod(delta.seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    data['uptime'] = "Days: " + str(delta.days) + " H:M:S: " + str(hours) + ":" + str(minutes) + ":" + str(seconds)
+    data['orders_waiting'] = len(order_queue)
+    data['orders_processed'] = 0
+    return data
 
 
 def register_dispenser(ip):
