@@ -89,7 +89,7 @@ def main():
         #print server.print_state({'robot': 'Cell1'})['response']
         resp = server.get_active_orders()
         print(resp)
-        time.sleep(1)  # Delay for 2 seconds
+        time.sleep(2)  # Delay for 2 seconds
 
 if __name__ == "__main__":
     main()

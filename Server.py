@@ -104,6 +104,8 @@ def mobile_status(m_status):
             if new_order != 0:
                 command = resource_handler.get_command_m(robot_name, m_status, dispenser, finish_order)
                 print command
+            else:
+                command = resource_handler.get_return_to_station_command(m_status)
 
             if command == 0:
                 command = {

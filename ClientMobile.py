@@ -78,7 +78,7 @@ def main():
         emulate_mobile_robot(mobile_response)
         print "Mobile state is: " + mobile_status['state']
         #print server.print_state({'robot': 'Mobile3'})['response']
-        time.sleep(1)  # Delay for 2 seconds
+        time.sleep(2)  # Delay for 2 seconds
 
 if __name__ == "__main__":
     main()

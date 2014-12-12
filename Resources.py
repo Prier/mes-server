@@ -373,6 +373,27 @@ class ResourceHandler():
         print 'Finished finding command'
         return command
 
+    def get_return_to_station_command(self, m_status):
+        current_pos = m_status['position']
+        dest = 'Station' + str(m_status['robot_id'])
+        if current_pos == dest:
+            return 0
+        next_pos = self.resources[current_pos].to_dispenser
+        if next_pos == 'Dispenser':  # if at inbox (next to dispenser)
+            command = {
+                'command': 'COMMAND_NAVIGATE',
+                'path': dest
+            }
+        elif not self.resources[next_pos].taken:
+            command = {
+                'command': 'COMMAND_NAVIGATE',
+                'path': next_pos
+            }
+        else:
+            command = 0
+        print 'processed mobile command for order status OS_TO_DISP'
+        return command
+
     def get_command_c_free(self, robot_name, c_status):
         current_order = self.resources[robot_name].bound_to_order
         command = 0
