@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 __author__ = 'armienn & reaver'
 
+import datetime
+
 OS_NOT_STARTED = 0
 OS_TO_DISP = 1
 OS_WAIT_FOR_DISP = 2
@@ -38,6 +40,11 @@ class Order():
         resources[cell].bound_to_order = self
         resources[cell].taken = True
         self.status = OS_NOT_STARTED
+        self.oee_time_to_dispenser = datetime.datetime.today()
+        self.oee_time_to_cell = 0
+        self.oee_time_to_sort = 0
+        self.oee_time_to_return = 0
+        self.oee_time_total = datetime.datetime.today()
 
     def allocate(self, resources, area, robot):
         self.allocated_areas.append(area)
@@ -132,17 +139,21 @@ class ResourceHandler():
 
         return order
 
-    def get_command_m(self, robot_name, m_status, dispenser, finish_order):
+    def get_command_m(self, robot_name, m_status, dispenser, finish_order, log_name):
         current_order = self.resources[robot_name].bound_to_order
         current_pos = m_status['position']
         current_order.deallocate(self.resources)
         command = 0
 
         if current_order.status == OS_NOT_STARTED:
+            text = "  Robot at " + current_pos + " starting on order #" + str(current_order.order['order_id']) + '\n'
+            log_write(robot_name + " " + log_name, str(datetime.datetime.today()) + '\n' + text)
             next_pos = self.resources[current_pos].to_dispenser
             current_order.allocate(self.resources, current_pos, robot_name)
             if next_pos == 1:
                 print 'at dispenser'
+                text = "  Robot at " + current_pos + " waiting for dispenser for order #" + str(current_order.order['order_id']) + '\n'
+                log_write(robot_name + " " + log_name, str(datetime.datetime.today()) + '\n' + text)
                 current_order.status = OS_WAIT_FOR_DISP
                 command = {
                     'command': 'COMMAND_WAIT'
@@ -163,6 +174,8 @@ class ResourceHandler():
             next_pos = self.resources[current_pos].to_dispenser
             if next_pos == 1:  # at the dispenser
                 print 'at dispenser'
+                text = "  Robot at " + current_pos + " waiting for dispenser for order #" + str(current_order.order['order_id']) + '\n'
+                log_write(robot_name + " " + log_name, str(datetime.datetime.today()) + '\n' + text)
                 current_order.status = OS_WAIT_FOR_DISP
                 command = {
                     'command': 'COMMAND_WAIT'
@@ -181,6 +194,8 @@ class ResourceHandler():
             #dispenser_has_dispensed = True  # TODO: check if bricks have been dispensed
             if (not dispenser['connected']) or self.dispenser_has_dispensed:
                 self.dispenser_has_dispensed = False
+                text = "  Robot at " + current_pos + " departing from dispenser for order #" + str(current_order.order['order_id']) + '\n'
+                log_write(robot_name + " " + log_name, str(datetime.datetime.today()) + '\n' + text)
                 current_order.status = OS_TO_CELL
                 next_pos = self.resources[current_pos].to_cell
                 if not self.resources[next_pos].taken:
@@ -204,6 +219,8 @@ class ResourceHandler():
             current_order.allocate(self.resources, current_pos, robot_name)
             next_pos = self.resources[current_pos].to_cell
             if next_pos == 2:  # at a cell
+                text = "  Robot at " + current_pos + " arrived at cell for order #" + str(current_order.order['order_id']) + '\n'
+                log_write(robot_name + " " + log_name, str(datetime.datetime.today()) + '\n' + text)
                 current_order.status = OS_WAIT_FOR_CELL
                 command = {
                     'command': 'COMMAND_WAIT'
@@ -262,6 +279,8 @@ class ResourceHandler():
             print 'processed mobile command for order status OS_WAIT_FOR_CELL'
 
         elif current_order.status == OS_TIP:
+            text = "  Robot at " + current_pos + " beginning to tip for order #" + str(current_order.order['order_id']) + '\n'
+            log_write(robot_name + " " + log_name, str(datetime.datetime.today()) + '\n' + text)
             current_order.allocate(self.resources, current_pos, robot_name)
             command = {
                 'command': 'COMMAND_TIP'
@@ -280,6 +299,8 @@ class ResourceHandler():
             current_order.allocate(self.resources, current_pos, robot_name)
             next_pos = self.resources[current_pos].to_cell
             if next_pos == 3:  # at a cell
+                text = "  Robot at " + current_pos + " waiting for cell to load bricks back for order #" + str(current_order.order['order_id']) + '\n'
+                log_write(robot_name + " " + log_name, str(datetime.datetime.today()) + '\n' + text)
                 current_order.status = OS_LOAD
                 command = {
                     'command': 'COMMAND_WAIT'
@@ -339,6 +360,8 @@ class ResourceHandler():
             next_pos = self.resources[current_pos].to_dispenser
             if next_pos == 1:  # at the dispenser
                 print 'at dispenser'
+                text = "  Robot at " + current_pos + " has returned to dispenser for order #" + str(current_order.order['order_id']) + '\n'
+                log_write(robot_name + " " + log_name, str(datetime.datetime.today()) + '\n' + text)
                 current_order.status = OS_FINALIZE
                 command = {
                     'command': 'COMMAND_WAIT'
@@ -360,6 +383,8 @@ class ResourceHandler():
                     'command': 'COMMAND_WAIT'
                 }
             else:
+                text = "  Robot at " + current_pos + " has gotten bricks removed for order #" + str(current_order.order['order_id']) + '\n'
+                log_write(robot_name + " " + log_name, str(datetime.datetime.today()) + '\n' + text)
                 finish_order(current_order.order)
             print 'processed mobile command for order status OS_RETURN'
 
@@ -520,6 +545,12 @@ class ResourceHandler():
 
             state += '  ' + statetext
         return {'response': state}
+
+
+def log_write(log_name, text):
+    f = open(log_name, 'a')
+    f.write(text)
+    f.close()
 
 
 def get_mobile_robot_name(number):

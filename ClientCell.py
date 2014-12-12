@@ -11,7 +11,7 @@ today = datetime.datetime.today()
 
 cell_status = {
     'version_id': 1,
-    'cell_id': 1,
+    'robot_id': 1,
     'state': 'STATE_FREE',
     'time': str(today),
     'status': "Human readable status message.."
