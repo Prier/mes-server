@@ -67,8 +67,9 @@ def mobile_status(m_status):
     log_write(str(datetime.datetime.today()) + '\n')
     log_write("  Message from mobile:\n")
     for k, v in m_status.items():
-        print k, ' = ', v
-        log_write("    " + str(k) + " = " + str(v) + '\n')
+        if k != 'version_id' and k != 'time':
+            print k, ' = ', v
+            log_write("    " + str(k) + " = " + str(v) + '\n')
 
     robot_id = m_status['robot_id']
     resource_handler.get_mobile_robot(robot_id).alive = True
@@ -78,7 +79,7 @@ def mobile_status(m_status):
         print robot_name, ' is working on order #', resource_handler.resources[robot_name].bound_to_order.order['order_id']
 
         if m_status['state'] == 'STATE_FREE' or m_status['state'] == 'STATE_WORKING':
-            command = resource_handler.get_command_m(robot_name, m_status, dispenser, finish_order)
+            command = resource_handler.get_command_m(robot_name, m_status, dispenser, finish_order, log_name)
 
             if command == 0:
                 command = {
@@ -102,8 +103,10 @@ def mobile_status(m_status):
                 print ' ', new_order.status, ' ', new_order.allocated_cell, ' ', new_order.allocated_robot
             command = 0
             if new_order != 0:
-                command = resource_handler.get_command_m(robot_name, m_status, dispenser, finish_order)
+                command = resource_handler.get_command_m(robot_name, m_status, dispenser, finish_order, log_name)
                 print command
+            else:
+                command = resource_handler.get_return_to_station_command(m_status)
 
             if command == 0:
                 command = {
@@ -133,8 +136,9 @@ def cell_status(c_status):
     log_write(str(datetime.datetime.today()) + '\n')
     log_write("  Message from cell:\n")
     for k, v in c_status.items():
-        print k, ' = ', v
-        log_write("    " + str(k) + " = " + str(v) + '\n')
+        if k != 'version_id' and k != 'time':
+            print k, ' = ', v
+            log_write("    " + str(k) + " = " + str(v) + '\n')
 
     # Save state information
     cell_id = c_status['robot_id']
