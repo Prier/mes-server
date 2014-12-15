@@ -75,7 +75,10 @@ def mobile_status(m_status):
     resource_handler.get_mobile_robot(robot_id).alive = True
     robot_name = Resources.get_mobile_robot_name(robot_id)
     order = resource_handler.get_mobile_robot(robot_id).bound_to_order
-    if order != 0:
+    if not resource_handler.resources.has_key(m_status['position']):
+        print(robot_name + ' is at unknown position ' + m_status['position'])
+        command = dict(command='COMMAND_WAIT')
+    elif order != 0:
         print robot_name, ' is working on order #', resource_handler.resources[robot_name].bound_to_order.order['order_id']
 
         if m_status['state'] == 'STATE_FREE' or m_status['state'] == 'STATE_WORKING':
@@ -94,7 +97,7 @@ def mobile_status(m_status):
         else:
             command = dict(command='COMMAND_ABORT')
     else:
-        if m_status['state'] == 'STATE_FREE':
+        if m_status['state'] == 'STATE_FREE' or m_status['state'] == 'STATE_WORKING':
             print robot_name, ' is available\n'
 
             new_order = resource_handler.get_order(robot_name, m_status, order_queue)
@@ -114,9 +117,9 @@ def mobile_status(m_status):
                 }
             print robot_name, ' is waiting\n'
 
-        elif m_status['state'] == 'STATE_WORKING':  # This shouldn't happen
-            print robot_name, ' is working\n'
-            command = dict(command='COMMAND_ABORT')
+        #elif m_status['state'] == 'STATE_WORKING':  # This shouldn't happen
+        #    print robot_name, ' is working\n'
+        #    command = dict(command='COMMAND_ABORT')
 
         elif m_status['state'] == 'STATE_ERROR':
             print robot_name, ' has encountered an error! ABORTING...\n'

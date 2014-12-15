@@ -431,7 +431,9 @@ class ResourceHandler():
             }
             print 'Processed command for OS_SORT'
         elif current_order.status == OS_LOAD:
-            command = dict(command='COMMAND_LOADBRICKS')
+            current_order.status = OS_RETURN
+            current_order.deallocate_cell(self.resources)
+            command = dict(command='COMMAND_WAIT')
             print 'Processed command for OS_LOAD'
         elif current_order.status == OS_WAIT_FOR_MOBILE:
             command = dict(command='COMMAND_WAIT')
