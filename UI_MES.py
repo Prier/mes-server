@@ -43,9 +43,6 @@ class orderWindowClass(QtGui.QMainWindow, setorder_class):
         self.cncl_btn.clicked.connect(self.cncl_btn_clicked)
 
     def ok_btn_clicked(self):
-        self.redSpinBox.setValue(0)
-        self.blueSpinBox.setValue(0)
-        self.yellowSpinBox.setValue(0)
         red = self.redSpinBox.value()
         blue = self.blueSpinBox.value()
         yellow = self.yellowSpinBox.value()
@@ -57,6 +54,10 @@ class orderWindowClass(QtGui.QMainWindow, setorder_class):
             server.add_order(order)
         except:
             errorWin.show()
+
+        self.redSpinBox.setValue(0)
+        self.blueSpinBox.setValue(0)
+        self.yellowSpinBox.setValue(0)
         orderWin.close()
 
     def cncl_btn_clicked(self):

@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="08c7b7ef-028a-481c-9b36-c8133e3197c5" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UI_MES.py" afterPath="$PROJECT_DIR$/UI_MES.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/mes-server.iml" afterPath="$PROJECT_DIR$/.idea/mes-server.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="mes-server.iws" />
@@ -60,8 +59,8 @@
       <file leaf-file-name="UI_MES.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/UI_MES.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.57052296" vertical-offset="378" max-vertical-offset="3636">
-              <caret line="47" column="38" selection-start-line="47" selection-start-column="38" selection-end-line="47" selection-end-column="38" />
+            <state vertical-scroll-proportion="0.53483146" vertical-offset="680" max-vertical-offset="3654">
+              <caret line="57" column="35" selection-start-line="57" selection-start-column="35" selection-end-line="57" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -107,10 +106,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1366" />
+    <option name="x" value="57" />
     <option name="y" value="24" />
-    <option name="width" value="1280" />
-    <option name="height" value="1000" />
+    <option name="width" value="1309" />
+    <option name="height" value="744" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -138,7 +137,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -159,6 +157,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -181,7 +180,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.ClientCell">
+  <component name="RunManager" selected="Python.UI_MES">
     <configuration default="false" name="Server" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -474,22 +473,26 @@
       <created>1418310087098</created>
       <updated>1418310087098</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="added reset of values for generate order window">
+      <created>1418311390404</created>
+      <updated>1418311390404</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1366" y="24" width="1280" height="1000" extended-state="6" />
+    <frame x="57" y="24" width="1309" height="744" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1578125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15737204" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39979655" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2729234" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="49" y="397" width="1871" height="317" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27272728" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="49" y="397" width="1871" height="317" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1197411" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -549,7 +552,8 @@
     <MESSAGE value="added sending order function to MES (tested and working locally)" />
     <MESSAGE value="added threaded status lights to all robots (not fully working)" />
     <MESSAGE value="added log and OEE data to GUI" />
-    <option name="LAST_COMMIT_MESSAGE" value="added log and OEE data to GUI" />
+    <MESSAGE value="added reset of values for generate order window" />
+    <option name="LAST_COMMIT_MESSAGE" value="added reset of values for generate order window" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -959,8 +963,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/UI_MES.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.57052296" vertical-offset="378" max-vertical-offset="3636">
-          <caret line="47" column="38" selection-start-line="47" selection-start-column="38" selection-end-line="47" selection-end-column="38" />
+        <state vertical-scroll-proportion="0.53483146" vertical-offset="680" max-vertical-offset="3654">
+          <caret line="57" column="35" selection-start-line="57" selection-start-column="35" selection-end-line="57" selection-end-column="35" />
           <folding />
         </state>
       </provider>
