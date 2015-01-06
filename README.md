@@ -27,6 +27,10 @@ The MES-server consists of Server.py and Resources.py. Running Server.py will st
 
 ![test](http://i.imgur.com/x0nrDWh.png?1 "Floor plan")
 
+## The Hidden Client
+The client actually consist of two parts, a hidden XML-RPC client and a ROS client with a "mes_command_topic" and a "mes_status_topic". The user of the client (workcell or mobile robot) will only see these ROS topics. While the XML-RPC client remains hidden.   
+![test](http://i.imgur.com/NYk8POw.png "Server - Client Diagram")
+
 ## Info for clients
 
 The first thing a client needs to know is the ip-address of the server. This is defined at the beginning of the client files. For testing you can have the server and client running on the same computer.
